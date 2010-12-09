@@ -1,0 +1,5 @@
+#!/bin/bash
+
+gcc simple2.c
+./a.out
+#fail based on program return value

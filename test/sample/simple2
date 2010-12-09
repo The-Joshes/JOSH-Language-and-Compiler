@@ -2,4 +2,7 @@
 
 gcc simple2.c
 ./a.out
+VAL=$?   #grab return value
+rm a.out #clean up
+exit $VAL
 #fail based on program return value

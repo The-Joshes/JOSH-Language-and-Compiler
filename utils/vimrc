@@ -1,0 +1,35 @@
+syntax enable
+colorscheme torte
+set nocompatible
+set autoindent
+set smartindent
+
+set tabstop=2
+set expandtab
+set shiftwidth=2
+
+"highlight lines longer than 80 chars
+match DiffAdd '\%>80v.*'
+
+set number
+set background=light
+set background=dark
+
+map <Left> <C-w><Left>
+map <Right> <C-w><Right>
+map <Up> <C-w><Up>
+map <Down> <C-w><Down>
+
+"taglist
+map <silent> tt :TlistToggle<CR>
+
+"minibufexpl
+map <silent> <C-Left> :bnext<CR>
+map <silent> <C-Right> :bprev<CR>
+
+"svn
+map su :!svn update<CR>
+
+"folding!
+:noremap f zfa{
+:noremap o zo

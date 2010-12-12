@@ -1,0 +1,5 @@
+UPPER=`echo $1 | tr '[:lower:]' '[:upper:]'`
+touch $1.h
+echo "#ifndef __"$UPPER"_H__" >> $1.h
+echo "#define __"$UPPER"_H__" >> $1.h
+echo "#endif" >> $1.h

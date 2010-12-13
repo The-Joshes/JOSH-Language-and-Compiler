@@ -3,6 +3,7 @@ colorscheme torte
 set nocompatible
 set autoindent
 set smartindent
+set number
 
 set tabstop=2
 set expandtab
@@ -11,10 +12,7 @@ set shiftwidth=2
 "highlight lines longer than 80 chars
 match DiffAdd '\%>80v.*'
 
-set number
-set background=light
-set background=dark
-
+"ease navigate between open files
 map <Left> <C-w><Left>
 map <Right> <C-w><Right>
 map <Up> <C-w><Up>
@@ -23,13 +21,13 @@ map <Down> <C-w><Down>
 "taglist
 map <silent> tt :TlistToggle<CR>
 
-"minibufexpl
+"move between buffers
 map <silent> <C-Left> :bnext<CR>
 map <silent> <C-Right> :bprev<CR>
 
 "svn
 map su :!svn update<CR>
 
-"folding!
+"folding
 :noremap f zfa{
 :noremap o zo

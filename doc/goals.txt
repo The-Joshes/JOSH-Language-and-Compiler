@@ -1,0 +1,40 @@
+To incorporate the best parts of a variety of languages, and incorporate them into one.
+
+Below is a list of languages that inspired the development of Josh. Each language is accompanied with a list of aspects that we wanted to imitate and a list of problems that we wished to avoid. Such lists include both general ideas of the language, and some specific features that either should or should not be included. 
+
+
+C++: 
+ This language was the most important contributor to the structure and grammar of Josh. Many C/C++ programs will work with no modifications, and most others will need only superficial changes. 
+ What to include: 
+ - Love of structure: A C++ program is practically forced into a very easy-to-follow structure, without being too overbearing.
+ - Simplicity: It is fairly easy to write a simple C++ program, say, to calculate your interest or to print a friendly greeting. 
+ - Efficiency: C++ is very efficient. Nuff said.
+
+ What not to include: 
+ - Class format: A few specific quips follow.
+   * The Typename Classname::Methodname(... format is too cumbersome. A simpler format would make programming classes easier. 
+   * Declaration of private variables and methods in the interface part of the class is necessary 
+   * The physical separation of class interface from class implementation often creates the (deplorable) necessity of using copy-paste in order to make the implementation match the interface, and causes problems when the interface is changed. 
+ - 
+
+
+Python:
+ What to include: 
+ - Simplicity: It is extremely easy to write a simple Python program. 
+ - Multiple assignment: An easy way to combine assignments that are logically related. As with any programming construct, it could hinder understanding, but in some situations, multiple assignment could make a programmer's logic more transparent. 
+ - 
+
+ What not to include: 
+ - Dependence on white space: A forgotten tab could easily cause your program to behave differently than it should, without any indication of an error until your client realizes that her cocktail dress is transparent instead of bright orange because an increment statement was outside of a for loop instead of in it.
+ - Lack of type-checking: A lot of errors could be checked easily
+ - Lack of compiling: Given that we're making compiler, this one's pretty much a given. 
+
+
+Java: 
+ What to include: 
+ - Portable. 
+ - 
+
+ What not to include: 
+ - Overbearing structure: Simple programs are far too complicated to write. 
+ - Inconsistent passing: Basic types are passed by value; Compound types by reference. Relatedly, there is no way to pass basic types by value. 

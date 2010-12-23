@@ -3,8 +3,9 @@
 
 enum TypeID
 {
-  VoidTypeID, IntegerTypeID, DecimalTypeID, 
-  PointerTypeID, ArrayTypeID, StructTypeID
+  VOIDTYPE, INTEGERTYPE, DECIMALTYPE,
+  POINTERTYPE, ARRAYTYPE, CUSTOMTYPE,
+  ERRORTYPE
 };
 
 class Type

@@ -1,7 +1,7 @@
 #ifndef __VALUE_H__
 #define __VALUE_H__
 
-#include "josh/type.h"
+#include "josh/ir/type.h"
 
 class Value
 {

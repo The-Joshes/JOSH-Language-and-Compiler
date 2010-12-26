@@ -16,8 +16,17 @@ namespace josh
     void prepend(T element);
     void removeAll();
     T &operator[](unsigned int index);
+
+    class Iterator
+    {
+      public:
+        Iterator& operator++();
+      private:
+        T *elmt;
+    };
   private:
     std::vector<T> fakeVector;
+    Iterator begin, end;
   };
 }
 
@@ -63,5 +72,13 @@ template <typename T>
 T& Vector<T>::operator[](unsigned int index)
 {
   return fakeVector[index];
+}
+
+template <typename T>
+Vector<T>::Iterator& 
+Vector<T>::Iterator::operator++()
+{
+  elmt++;
+  return *this;
 }
 #endif

@@ -3,10 +3,13 @@
 
 #include "utils/vector.h"
 
-/// class Value
+class Type;
+
+//! class Value
+//! represents any value computed and/or used by a program
 /*!
  * Value is the base of a series of classes that represent all values 
- * computed and/or used by a program.  Value's constructor is private,
+ * computed and/or used by a program.  Value is an abstract base class,
  * so it is impossible to create an actual instance of Value.
  * One must call a sub class' constructor or create method in order
  * to create a instance with a superclass of Value.  The 2 primary
@@ -23,8 +26,6 @@
  * changed directly through Value, only through subclasses (for example,
  * adding operands to an Instruction).
  */
-
-class Type;
 
 class Value
 {
@@ -61,23 +62,18 @@ public:
   bool isConstant();
 
 protected:
-  void addUser(Value*); //adds Value to the user list
+  void addUser(Value*); /**< adds Value to the user list */
   
-  void addUse(Value*); //adds Value to the uses list
-  bool removeUse(Value*); //if Value is in uses list, removes and returns true
-  void removeUseAt(int); //removes Value at location in in the uses list
+  void addUse(Value*); /**< adds Value to the uses list */
+  bool removeUse(Value*); /**< if Value is in uses list, removes and returns true */
+  void removeUseAt(int); /**< removes Value at location in in the uses list */
 
-  Type *type; //this Value's type
+  Type *type; /**< this Value's type */
   
-  josh::Vector<Value*> users; //all Values that use this Value
-  josh::Vector<Value*> uses; //all Values this Value depends on
+  josh::Vector<Value*> users; /**< all Values that use this Value */
+  josh::Vector<Value*> uses; /**< all Values this Value depends on */
  
-  bool isConstant; //is the Value constant?
-
-private:
-  /// Constructor
-  /// private so that an instance of Value cannot be instanciated
-  Value();
+  bool isConstant; /**< is the Value constant? */
 };
 
 #endif

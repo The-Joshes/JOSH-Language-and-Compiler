@@ -6,8 +6,10 @@ class EmptyIterator {};
 
 template <typename T>
 class Iterator {
+public:
   virtual const T next() = 0;
   virtual const T hasNext() = 0;
+  virtual const T &operator*() = 0;
 };
 
 #endif /* __ITERATOR_H__ */

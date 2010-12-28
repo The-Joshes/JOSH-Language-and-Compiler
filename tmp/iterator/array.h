@@ -1,7 +1,7 @@
 #ifndef __ARRAY_H__
 #define __ARRAY_H__
 
-#include "iterator.h"
+#include "arrayiterator.h"
 
 class ArrayIndexOutOfBounds {
 };
@@ -28,11 +28,12 @@ private:
   void extend();
   
   struct iterNode {
-    Iterator *it;
+    ArrayIterator<T> *it;
     iterNode *next;
   };
 
   iterNode *validIters;
+  iterNode *invalidIters;
 
   void invalidateIterators();
 };

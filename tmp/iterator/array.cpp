@@ -8,6 +8,8 @@ Array<T>::Array() {
   maxElts = INITSIZE;
   data = new T[maxElts];
   numElts = 0;
+  validIters = 0;
+  invalidIters = 0;
 }
 
 template <typename T>
@@ -15,11 +17,26 @@ Array<T>::Array(unsigned int initSize) {
   maxElts = initSize;
   data = new T[maxElts];
   numElts = 0;
+  validIters = 0;
+  invalidIters = 0;
 }
 
 template <typename T>
 Array<T>::~Array() {
   delete [] data;
+
+  while(validIters) {
+    iterNode *node = validIters;
+    validIters = node->next;
+    delete node->it;
+    delete node;
+  }
+  while(invalidIters) {
+    iterNode *node = invalidIters;
+    invalidIters = node->next;
+    delete node->it;
+    delete node;
+  }
 }
 
 template <typename T>
@@ -43,6 +60,25 @@ void Array<T>::append(const T &elt) {
 }
 
 template <typename T>
+Iterator<T> &Array<T>::iterator() {
+  iterNode *node;
+  if(invalidIters) {
+    node = invalidIters;
+    invalidIters = node->next;
+    node->it->init(data, numElts);
+  }
+  else {
+    node = new iterNode;
+    node->it = new ArrayIterator<T>(data, numElts);
+  }
+  
+  node->next = validIters;
+  validIters = node;
+
+  return *(node->it);
+}
+
+template <typename T>
 void Array<T>::checkBounds(unsigned int index) {
   if(index >= numElts)
     throw ArrayIndexOutOfBounds();
@@ -59,46 +95,12 @@ void Array<T>::extend() {
 }
 
 template <typename T>
-Iterator<T> &Array<T>::iterator() {
-  Iterator *it = new ArrayIterator(data, numElts);
-  iterNode *node = new iterNode;
-  node->it = it;
-  node->next = validIters;
-  validIters = node;
+void Array<T>::invalidateIterators() {
+  while(validIters) {
+    iterNode *node = validIters;
+    validIters->it->invalidate();
+    validIters = validIters->next;
+    node->next = invalidIters;
+    invalidIters = node;
+  }
 }
-
-template <typename T>
-class ArrayIterator : public Iterator<T> {
-public: 
-  ArrayIterator(T *iterData, unsigned int iterSize) {
-    data = iterData;
-    numElts = iterSize;
-    valid = true;
-  }
-
-  const T next() {
-    if(!valid)
-      throw InvalidIterator();
-    if(index == numElts)
-      throw EmptyIterator();
-    return data[index++];
-  }
-
-  const T hasNext() {
-    if(!valid)
-      throw InvalidIterator();
-    return index < numElts;
-  }
-
-  const T &operator*() {
-    if(!valid)
-      throw InvalidIterator();
-    if(index == numElts)
-      throw EmptyIterator();
-    retirm data[index];
-  }
-private: 
-  T *data;
-  unsigned int index, numElts;
-  bool valid;
-};

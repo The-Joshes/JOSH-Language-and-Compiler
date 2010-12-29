@@ -1,12 +1,12 @@
-#include "arrayiterator.h"
+#include "utils/listiterator.h"
 
 template <typename T>
-ArrayIterator<T>::ArrayIterator(T *iterData, unsigned int iterSize) {
+ListIterator<T>::ListIterator(T *iterData, unsigned int iterSize) {
   init(iterData, iterSize);
 }
 
 template <typename T>
-const T ArrayIterator<T>::next() {
+const T ListIterator<T>::next() {
   if(!valid)
     throw InvalidIterator();
   if(index >= numElts)
@@ -15,14 +15,14 @@ const T ArrayIterator<T>::next() {
 }
 
 template <typename T>
-const T ArrayIterator<T>::hasNext() {
+const T ListIterator<T>::hasNext() {
   if(!valid)
     throw InvalidIterator();
   return index < numElts;
 }
 
 template <typename T>
-const T &ArrayIterator<T>::operator*() {
+const T &ListIterator<T>::operator*() {
   if(!valid)
     throw InvalidIterator();
   if(index >= numElts)
@@ -31,7 +31,7 @@ const T &ArrayIterator<T>::operator*() {
 }
 
 template <typename T>
-void ArrayIterator<T>::init(T *iterData, unsigned int iterSize) {
+void ListIterator<T>::init(T *iterData, unsigned int iterSize) {
   data = iterData;
   numElts = iterSize;
   valid = true;
@@ -39,6 +39,6 @@ void ArrayIterator<T>::init(T *iterData, unsigned int iterSize) {
 }
 
 template <typename T>
-void ArrayIterator<T>::invalidate() {
+void ListIterator<T>::invalidate() {
   valid = false;
 }

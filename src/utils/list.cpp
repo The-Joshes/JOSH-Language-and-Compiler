@@ -1,10 +1,10 @@
-#include "iterator.h"
-#include "array.h"
+#include "utils/iterator.h"
+#include "utils/list.h"
 
 #define INITSIZE 10
 
 template <typename T>
-Array<T>::Array() {
+List<T>::List() {
   maxElts = INITSIZE;
   data = new T[maxElts];
   numElts = 0;
@@ -13,7 +13,7 @@ Array<T>::Array() {
 }
 
 template <typename T>
-Array<T>::Array(unsigned int initSize) {
+List<T>::List(unsigned int initSize) {
   maxElts = initSize;
   data = new T[maxElts];
   numElts = 0;
@@ -22,7 +22,7 @@ Array<T>::Array(unsigned int initSize) {
 }
 
 template <typename T>
-Array<T>::~Array() {
+List<T>::~List() {
   delete [] data;
 
   while(validIters) {
@@ -40,19 +40,19 @@ Array<T>::~Array() {
 }
 
 template <typename T>
-const T &Array<T>::operator[](unsigned int index) const {
+const T &List<T>::operator[](unsigned int index) const {
   checkBounds(index);
   return data[index];
 }
 
 template <typename T>
-T &Array<T>::operator[](unsigned int index) {
+T &List<T>::operator[](unsigned int index) {
   checkBounds(index);
   return data[index];
 }
 
 template <typename T>
-void Array<T>::append(const T &elt) {
+void List<T>::append(const T &elt) {
   while(numElts >= maxElts)
     extend();
   data[numElts++] = elt;
@@ -60,7 +60,7 @@ void Array<T>::append(const T &elt) {
 }
 
 template <typename T>
-Iterator<T> &Array<T>::iterator() {
+Iterator<T> &List<T>::iterator() {
   iterNode *node;
   if(invalidIters) {
     node = invalidIters;
@@ -69,7 +69,7 @@ Iterator<T> &Array<T>::iterator() {
   }
   else {
     node = new iterNode;
-    node->it = new ArrayIterator<T>(data, numElts);
+    node->it = new ListIterator<T>(data, numElts);
   }
   
   node->next = validIters;
@@ -79,14 +79,14 @@ Iterator<T> &Array<T>::iterator() {
 }
 
 template <typename T>
-void Array<T>::checkBounds(unsigned int index) {
+void List<T>::checkBounds(unsigned int index) {
   if(index >= numElts)
-    throw ArrayIndexOutOfBounds();
+    throw ListIndexOutOfBounds();
   return;
 }
 
 template <typename T>
-void Array<T>::extend() {
+void List<T>::extend() {
   T *newData = new T[2*maxElts+1];
   for(int i = 0; i < maxElts; i++)
     newData[i] = data[i];
@@ -95,7 +95,7 @@ void Array<T>::extend() {
 }
 
 template <typename T>
-void Array<T>::invalidateIterators() {
+void List<T>::invalidateIterators() {
   while(validIters) {
     iterNode *node = validIters;
     validIters->it->invalidate();

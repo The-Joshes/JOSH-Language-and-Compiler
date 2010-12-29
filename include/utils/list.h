@@ -1,17 +1,17 @@
-#ifndef __ARRAY_H__
-#define __ARRAY_H__
+#ifndef __LIST_H__
+#define __LIST_H__
 
-#include "arrayiterator.h"
+#include "utils/listiterator.h"
 
-class ArrayIndexOutOfBounds {
+class ListIndexOutOfBounds {
 };
 
 template <typename T>
-class Array {
+class List {
 public:
-  Array();
-  Array(unsigned int initSize);
-  ~Array();
+  List();
+  List(unsigned int initSize);
+  ~List();
 
   const T &operator[](unsigned int index) const;
   T &operator[](unsigned int index);
@@ -28,7 +28,7 @@ private:
   void extend();
   
   struct iterNode {
-    ArrayIterator<T> *it;
+    ListIterator<T> *it;
     iterNode *next;
   };
 
@@ -38,6 +38,8 @@ private:
   void invalidateIterators();
 };
 
-#include "array.cpp"
+#define __LIST_CPP__ "../../src/utils/list.cpp"
 
-#endif /* __ARRAY_H__ */
+#include __LIST_CPP__
+
+#endif /* __LIST_H__ */

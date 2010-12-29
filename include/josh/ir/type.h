@@ -1,7 +1,7 @@
 #ifndef __TYPE_H__
 #define __TYPE_H__
 
-enum TypeID
+enum BaseType
 {
   VOIDTYPE, INTEGERTYPE, DECIMALTYPE,
   POINTERTYPE, ARRAYTYPE, CUSTOMTYPE,
@@ -11,11 +11,10 @@ enum TypeID
 class Type
 {
 public:
-  TypeID getTypeID() const;
+  inline BaseType getBaseType() const;
 
 protected:
-  TypeID typeid;
-  
+  BaseType basicType;
 };
 
 #endif

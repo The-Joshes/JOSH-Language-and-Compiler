@@ -7,7 +7,7 @@
 
 /// class Instruction
 /// represents all Values which must be computed at run time
-/*!
+/**
  * Instruction is a subclass of Value that represents a Value whos value
  * and/or size are not known at compile time, and thus must be computed
  * at run time.

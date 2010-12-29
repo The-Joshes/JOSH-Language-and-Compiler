@@ -1,13 +1,13 @@
 #ifndef __VALUE_H__
 #define __VALUE_H__
 
-#include "utils/vector.h"
+#include "utils/list.h"
 
 class Type;
 
 /// class Value
 /// represents any value computed and/or used by a program
-/*!
+/**
  * Value is the base of a series of classes that represent all values 
  * computed and/or used by a program.  Value is an abstract base class,
  * so it is impossible to create an actual instance of Value.
@@ -33,31 +33,29 @@ public:
   const Type* getType();
 
   //  getUsers()
-  /// returns a const Vector containing all Values which depend on this Value.
-  /// an empty vector implies this Value is never used.
-  const josh::Vector<Value*>* getUsers();
+  /// returns an Iterator containing all Values which depend on this Value.
+  /// an empty Iterator implies this Value is never used.
+  josh::Iterator<Value*>& getUsers();
  
   //  getUses()
-  /// returns a const Vector containing all Values that this Value depends on.
-  /// Values of the class Constant will return an empty vector.
-  const josh::Vector<Value*>* getUses();
+  /// returns an Iterator containing all Values that this Value depends on.
+  /// an empty Iterator implies this Value is a Constant (or is not properly set up!).
+  josh::Iterator<Value*>& getUses();
 
   //  isConstant()
   /// a Value is constant if one of two things are true:
   /// 1) it is a Constant
   /// -- or --
-  /// 2) all of its uses are constant.
+  /// 2) it is an arithmetic operation and all of its uses are constant.
   /// Every time the uses are modified, constantness is updated.
   bool isConstant();
 
 protected:
-  josh::Vector<Value*> users; ///< all Values that use this Value
   void addUser(Value*);       ///< adds Value to the user list
   bool removeUser(Value*);    ///< if Value is in users list, removes and returns true
   void removeUserAt(int);     ///< removes Value at location in in the users list
                               ///< asserts 0 if int is out of range of the users list
   
-  josh::Vector<Value*> uses;  ///< all Values this Value depends on
   void addUse(Value*);        ///< adds Value to the uses list
   bool removeUse(Value*);     ///< if Value is in uses list, removes and returns true
   void removeUseAt(int);      ///< removes Value at location in in the uses list
@@ -66,6 +64,8 @@ protected:
   Type *type; ///< this Value's type
  
   bool isConstant; ///< is this Value constant? @see isConstant()
-};
 
-#endif
+private:
+  josh::List<Value*> users; ///< all Values that use this Value
+  josh::List<Value*> uses;  ///< all Values this Value depends on
+};

@@ -13,19 +13,15 @@ class Type;
  * Constant is a subclass of Value that represents a Value whos size and value
  * are known at compile time.
  */
-template <typename T>
-class Constant<T> : public Value
+class Constant : public Value
 {
 public:
   //  CreateEquivalentConstant(Value*)
-  /// if Value isConstant() (either a Constant or all of its uses are constant)
+  /// if Value canBeComputedAtCompileTime()
   /// this method returns a Constant that is equivalent to Value.  
-  /// If Value is not constant, 0 is asserted.
+  /// If Value can not be computed at compile time, 0 is asserted.
   static Constant* CreateEquivalentConstant(Value*);
-
-  T *getValue();
 protected:
-  T* value;
 };
 
 #endif

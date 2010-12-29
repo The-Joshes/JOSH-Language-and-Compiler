@@ -2,6 +2,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace josh;
 
 int main() {
   List<int> list;
@@ -49,5 +50,8 @@ int main() {
   
   Iterator<int> &it3 = list.iterator();
   cout << "Iterator 3: " << &it3 << '\n';
+
+  while(it1.hasNext())
+    cout << "Iterator 1: " << it1.next() << '\n';
   
 }

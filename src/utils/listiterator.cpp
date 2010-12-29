@@ -1,5 +1,7 @@
 #include "utils/listiterator.h"
 
+using namespace josh;
+
 template <typename T>
 ListIterator<T>::ListIterator(T *iterData, unsigned int iterSize) {
   init(iterData, iterSize);

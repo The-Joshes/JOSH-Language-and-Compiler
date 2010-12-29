@@ -3,6 +3,8 @@
 
 #define INITSIZE 10
 
+using namespace josh;
+
 template <typename T>
 List<T>::List() {
   maxElts = INITSIZE;

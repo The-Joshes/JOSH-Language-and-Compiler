@@ -9,3 +9,6 @@ HOME_DIR = ..
 
 doxygen: 
 	cd $(DOXYGEN_DIR) && $(DOXYGEN) $(DOXYFILE) && cd $(HOME_DIR)
+
+clean: 
+	cd $(DOXYGEN_DIR) && rm html/ latex/ -rf && cd $(HOME_DIR)

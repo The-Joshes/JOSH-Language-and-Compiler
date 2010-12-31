@@ -1,8 +1,6 @@
 #ifndef __INSTRUCTION_H__
 #define __INSTRUCTION_H__
 
-#include "utils/vector.h"
-
 #include "josh/ir/value.h"
 
 /// class Instruction
@@ -15,7 +13,20 @@
 class Instruction : public Value
 {
 public:
+  enum InstCategory
+  {
+    BINARY, TERMINATOR, CALL, PHINODE, STORE, LOAD, ALLOCA
+  };
+
+  InstCategory getInstCategory();
+
+protected:
+  // Constructor
+  /// requires the instruction's type and its category
+  Instruction(Type*, InstCategory);
+
 private:
+  InstCategory instCat;
 };
 
 #endif

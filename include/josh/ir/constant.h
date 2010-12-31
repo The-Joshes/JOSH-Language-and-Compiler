@@ -1,13 +1,12 @@
 #ifndef __CONSTANT_H__
 #define __CONSTANT_H__
 
-#include "utils/vector.h"
-
 #include "josh/ir/value.h"
 
 class Type;
-/// template <typename T>
-/// class Constant<T>
+class BinaryInst;
+
+/// class Constant
 /// represents all Values whos value and size are known at compile time
 /**
  * Constant is a subclass of Value that represents a Value whos size and value
@@ -16,11 +15,11 @@ class Type;
 class Constant : public Value
 {
 public:
-  //  CreateEquivalentConstant(Value*)
-  /// if Value canBeComputedAtCompileTime()
-  /// this method returns a Constant that is equivalent to Value.  
-  /// If Value can not be computed at compile time, 0 is asserted.
-  static Constant* CreateEquivalentConstant(Value*);
+  //  CreateEquivalentConstant(BinaryInst*)
+  /// If BinaryInst->canBeComputedAtCompileTime(),
+  /// this method returns a Constant that is equivalent to BinaryInst;
+  /// if !BinaryInst->canBeComputedAtCompileTime(), 0 is asserted.
+  static Constant* CreateEquivalentConstant(BinaryInst*);
 protected:
 };
 

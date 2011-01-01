@@ -35,20 +35,20 @@ public:
   bool isConstant(); ///< is this Value a subclass of Constant?
 
   //  getUsers()
-  /// returns an Iterator containing all Values which depend on this Value.
-  /// an empty Iterator implies this Value is never used.
+  /// Returns an Iterator containing all Values which depend on this Value.
+  /// An empty Iterator implies this Value is never used.
   josh::Iterator<Value*>& getUsers();
   int getNumUsers(); ///< returns the number of Values that use this Value
  
   //  getUses()
-  /// returns an Iterator containing all Values that this Value depends on.
-  /// an empty Iterator implies this Value is a Constant (or is not completely set up!).
+  /// Returns an Iterator containing all Values that this Value depends on.
+  /// An empty Iterator implies this Value is a Constant (or is not completely set up!).
   josh::Iterator<Value*>& getUses();
 
   //  void replaceAllUsesWith(Value*)
-  /// replaces all uses of this value with Value
-  /// iterates over this Value's user list and replaces 
-  /// Value's use of this value with the new Value
+  /// Replaces all uses of this value with the new Value.
+  /// Iterates over this Value's user list and replaces 
+  /// each use of this value with the new Value
   void replaceAllUsesWith(Value*);
 
   //  Destructor

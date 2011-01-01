@@ -18,8 +18,8 @@ public:
   };
 
   //  getBaseType()
-  /// returns an enum detailing the exact type this Type describes.
-  /// for example, to check if a type is an integer, do
+  /// Returns an enum detailing the exact type this Type describes.
+  /// For example, to check if a type is an integer, do
   /// (type->getBaseType() == Type::INTEGER)
   BaseType getBaseType() const;
 

@@ -9,7 +9,7 @@ Instruction::Instruction(Type *type, InstCategory instCategory)
 }
 
 //  getInstCategory()
-InstCategory Instruction::getInstCategory()
+Instruction::InstCategory Instruction::getInstCategory()
 {
   return instCat;
 }

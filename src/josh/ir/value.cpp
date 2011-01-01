@@ -12,10 +12,9 @@ bool Value::isConstant()
   return isConstantClass;
 }
 
-Iterator<Value*>& Value::getUsers()
+josh::Iterator<Value*>& Value::getUsers()
 {
-  assert(0 && "Not implemented yet!");
-//  return users.iterator();
+  return users.iterator();
 }
 
 int Value::getNumUsers()
@@ -23,10 +22,9 @@ int Value::getNumUsers()
   assert(0 && "Not implemented yet!");
 }
 
-Iterator<Value*>& Value::getUses()
+josh::Iterator<Value*>& Value::getUses()
 {
-  assert(0 && "Not implemented yet!");
-//  return uses.iterator();
+  return uses.iterator();
 }
 
 void Value::replaceAllUsesWith(Value *v)
@@ -56,10 +54,6 @@ void Value::addUse(Value *newUse)
 
   // add this to newUse's user list
   newUse->addUser(this);
-  
-  // if newUse is not constant, one more non constant use
-  if(!newUse->isConstant())
-    numNonConstantUses++;
 }
 
 bool Value::removeUse(Value *oldUse)
@@ -69,15 +63,6 @@ bool Value::removeUse(Value *oldUse)
 
   // remove this from oldUse's user list
   oldUse->removeUser(this);
-
-  // if oldUse is not constant, one less non constant use
-  if(!oldUse->isConstant())
-    numNonConstantUses--;
-}
-
-bool Value::allUsesConstant()
-{
-  return (numNonConstantUses == 0);
 }
 
 Value::Value(Type *type, bool isConstant)
@@ -86,10 +71,4 @@ Value::Value(Type *type, bool isConstant)
   // users and uses automatically initialized to empty
   this->type = type;
   this->isConstantClass = isConstant;
-  this->numNonConstantUses = 0;
-}
-
-int main()
-{
-  return 0;
 }

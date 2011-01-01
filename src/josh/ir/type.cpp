@@ -1,33 +1,13 @@
 #include "josh/ir/type.h"
 
-/* Type
- */
-bool Type::isVoidType()
+#include <assert.h>
+
+Type::BaseType Type::getBaseType() const
 {
-  return typeID == VoidTypeID;
+  return baseType;
 }
 
-bool Type::isIntegerType()
+bool Type::equals(Type *t) const
 {
-  return typeID == IntegerTypeID;
-}
-
-bool Type::isDecimalType()
-{
-  return typeID == DecimalTypeID;
-}
-
-bool Type::isPointerType()
-{
-  return typeID == PointerTypeID;
-}
-
-bool Type::isArrayType()
-{
-  return typeID == ArrayTypeID;
-}
-
-bool Type::isStructType()
-{
-  return typeID == StructTypeID;
+  assert(0 && "Not implemented yet");
 }

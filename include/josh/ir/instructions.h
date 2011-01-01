@@ -3,7 +3,11 @@
 
 #include "josh/ir/instruction.h"
 
+#include <cstring> // for NULL
+#include <utility>
+
 class BasicBlock;
+class PointerType;
 
   /***************************************************************************
    *                           BinaryInst                                    *
@@ -53,8 +57,6 @@ public:
   //  canBeComputedAtCompileTime()
   /// returns true if this Instruction's value can be computed at compile time,
   /// returns false otherwise.
-  /// A BinaryInst can be computed at compile time if all of its uses are Constant
-  /// and the Instruction's execution is guaranteed not to trap.
   bool canBeComputedAtCompileTime();
 
   bool isArithmetic(); ///< returns true if this BinaryInst is arithmetic
@@ -63,8 +65,8 @@ public:
   BinaryOp getBinaryOp(); ///< returns this instruction's op
   Type *getOpType();      ///< returns the type of the operator
 
-  const Value *getLHS(); ///< returns the Value corresponding to the lhs of the BinaryInst
-  const Value *getRHS(); ///< returns the Value corresponding to the rhs of the BinaryInst
+  Value *getLHS(); ///< returns the Value corresponding to the lhs of the BinaryInst
+  Value *getRHS(); ///< returns the Value corresponding to the rhs of the BinaryInst
 
   void setLHS(Value*); ///< changes the lhs Value.
                        ///< asserts 0 if the new Value has a differing Type.
@@ -85,7 +87,7 @@ private:
   /***************************************************************************
    *                           TerminatorInst                                *
    ***************************************************************************/
-/// All Instructions that serve as terminators; that is, 
+/// All Instructions that serve as terminators; that is, instructions that
 /// disrupt the flow of control.
 class TerminatorInst : public Instruction
 {
@@ -102,7 +104,9 @@ private:
   /***************************************************************************
    *                           CallInst                                      *
    ***************************************************************************/
-/// Instruction that calls a function
+/// Instruction that calls a function.  Takes on the Type of the function's
+/// return Value.  Thus if the function returns void, this Value is of Type
+/// void and cannot be used by subsequent Instructions.
 class CallInst : public Instruction
 {
 public:
@@ -112,7 +116,7 @@ private:
   /***************************************************************************
    *                           PhiNode                                       *
    ***************************************************************************/
-/// A Phi Instruction ('function') makes SSA form possible by
+/// A PhiNode Instruction ('phi function') makes SSA form possible by
 /// allowing a Value to take value based on where flow of control
 /// came from.  For a given PhiNode, every successor basic block to the
 /// PhiNode's parent basic block must be represented by a (path, value) pair.
@@ -140,21 +144,21 @@ public:
   /// Asserts 0 if int is out of range.
   Value* getNthValue(int);
 
-  //  setNthValue(Value*, int)
+  //  setNthValue(int, Value*)
   /// Sets the Value located at position int in the list of incoming pairs.
   /// Asserts 0 if Value is not the same Type as the PhiNode.
   /// Asserts 0 if int is out of range.
-  void setNthValue(Value*, int);
+  void setNthValue(int, Value*);
 
   //  getNthBlock(int)
   /// Returns the BasicBlock located at position int in the list of incoming pairs.
   /// Asserts 0 if int is out of range.
   BasicBlock* getNthBlock(int);
   
-  //  setNthBlock(BasicBlock*, int)
+  //  setNthBlock(int, BasicBlock*)
   /// Sets the BasicBlock located at position int in the list of incoming pairs.
   /// Asserts 0 if int is out of range.
-  void setNthBlock(BasicBlock*, int);
+  void setNthBlock(int, BasicBlock*);
 
   //  addPair(Value*, BasicBlock*)
   /// adds the pair of (Value*, BasicBlock*) to the list of incoming pairs.
@@ -179,6 +183,8 @@ private:
   /***************************************************************************
    *                           StoreInst                                     *
    ***************************************************************************/
+/// Stores a value to memory.  All StoreInst are void Type, thus that they
+/// cannot be used by subsequent Instructions.
 class StoreInst : public Instruction
 {
 public:
@@ -189,21 +195,25 @@ public:
   static StoreInst* Create(Value *toStore, Value *address);
 
   Value* getStoredValue(); ///< returns the Value which this is storing
+  void setStoredValue(Value*);
   Value* getAddress();     ///< returns the address to which this is storing to
+  void setAddress(Value*);
 
 protected:
   //  Constructor
-  StoreInst(Value *toStore, Value *address);
+  StoreInst(PointerType *addressType);
 
 private:
   Value *toStore;
   Value *address;
+  PointerType  *addressType;
 
 };
 
   /***************************************************************************
    *                           LoadInst                                      *
    ***************************************************************************/
+/// Loads a Value from memory.  
 class LoadInst : public Instruction
 {
 public:
@@ -212,6 +222,15 @@ public:
   /// Asserts 0 if address's Type is not a pointer
   static LoadInst* Create(Value *address);
 
+  Value *getAddress();     ///< returns the address to which this is loading from
+  void setAddress(Value*); ///< sets the Value to which this instruction stores to
+                           ///< asserts 0 if the Value's Type is not a pointer
+                           ///< asserts 0 if the Type is different
+
+protected:
+  //  Constructor
+  LoadInst(PointerType *addressType);
+
 private:
   Value *address;
 };
@@ -219,12 +238,21 @@ private:
   /***************************************************************************
    *                          AllocaInst                                     *
    ***************************************************************************/
+/// Allocates a piece of memory on the stack.
 class AllocaInst : public Instruction
 {
 public:
   static AllocaInst* Create(Type *type);
-  static AllocaInst* CreateArray(Type *type, Value *size);
+  static AllocaInst* CreateArray(Type *type, Value *arraySize);
+
+  Value *getArraySize(); ///< size of array, must be of Type int;
+                         ///< NULL means array size of 1 (no array!)
+
+protected:
+  AllocaInst(Type *type, Value *arraySize = NULL);
+
 private:
+  Value *arraySize; ///< @see getArraySize()
 };
 
 #endif

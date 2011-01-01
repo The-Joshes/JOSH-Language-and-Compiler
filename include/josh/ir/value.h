@@ -37,13 +37,13 @@ public:
   //  getUsers()
   /// returns an Iterator containing all Values which depend on this Value.
   /// an empty Iterator implies this Value is never used.
-  Iterator<Value*>& getUsers();
+  josh::Iterator<Value*>& getUsers();
   int getNumUsers(); ///< returns the number of Values that use this Value
  
   //  getUses()
   /// returns an Iterator containing all Values that this Value depends on.
   /// an empty Iterator implies this Value is a Constant (or is not completely set up!).
-  Iterator<Value*>& getUses();
+  josh::Iterator<Value*>& getUses();
 
   //  void replaceAllUsesWith(Value*)
   /// replaces all uses of this value with Value
@@ -61,11 +61,6 @@ protected:
   void addUse(Value*);     ///< adds Value to the uses list
   bool removeUse(Value*);  ///< if Value is in uses list, removes and returns true
  
-  /// returns true if all Values this Value relies on are subclasses of Constant;
-  /// returns true if this Value relies on no Values;
-  /// returns false otherwise.
-  bool allUsesConstant();  
-  
   //  Constructor
   Value(Type*, bool isConstant = false);
   
@@ -73,10 +68,9 @@ private:
   Type *type; ///< this Value's type
   
   bool isConstantClass;   ///< @see isConstant()
-  int numNonConstantUses; ///< @see allUsesConstant()
 
-  List<Value*> users; ///< all Values that use this Value
-  List<Value*> uses;  ///< all Values this Value depends on
+  josh::List<Value*> users; ///< all Values that use this Value
+  josh::List<Value*> uses;  ///< all Values this Value depends on
 };
 
 #endif

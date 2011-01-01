@@ -4,7 +4,7 @@
 //  class Type
 /// Describe's a Value's Type.
 /// Typically Values of different Types cannot interact with eachother.
-/// To check if two types are equal, use the equal method.
+/// To check if two types are equal, use the equals(Type*) method.
 class Type
 {
 public:

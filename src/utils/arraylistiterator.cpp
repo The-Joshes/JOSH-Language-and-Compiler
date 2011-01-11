@@ -1,12 +1,12 @@
-#include "utils/listiterator.h"
+#include "utils/arraylistiterator.h"
 
 template <typename T>
-josh::ListIterator<T>::ListIterator(T *iterData, unsigned int iterSize) {
+josh::ArrayListIterator<T>::ArrayListIterator(T *iterData, unsigned int iterSize) {
   init(iterData, iterSize);
 }
 
 template <typename T>
-const T josh::ListIterator<T>::next() {
+const T josh::ArrayListIterator<T>::next() {
   if(!valid)
     throw InvalidIterator();
   if(index >= numElts)
@@ -15,14 +15,14 @@ const T josh::ListIterator<T>::next() {
 }
 
 template <typename T>
-const bool josh::ListIterator<T>::hasNext() {
+const bool josh::ArrayListIterator<T>::hasNext() {
   if(!valid)
     throw InvalidIterator();
   return index < numElts;
 }
 
 template <typename T>
-const T &josh::ListIterator<T>::operator*() {
+const T &josh::ArrayListIterator<T>::operator*() {
   if(!valid)
     throw InvalidIterator();
   if(index >= numElts)
@@ -31,7 +31,7 @@ const T &josh::ListIterator<T>::operator*() {
 }
 
 template <typename T>
-void josh::ListIterator<T>::init(T *iterData, unsigned int iterSize) {
+void josh::ArrayListIterator<T>::init(T *iterData, unsigned int iterSize) {
   data = iterData;
   numElts = iterSize;
   valid = true;
@@ -39,6 +39,6 @@ void josh::ListIterator<T>::init(T *iterData, unsigned int iterSize) {
 }
 
 template <typename T>
-void josh::ListIterator<T>::invalidate() {
+void josh::ArrayListIterator<T>::invalidate() {
   valid = false;
 }

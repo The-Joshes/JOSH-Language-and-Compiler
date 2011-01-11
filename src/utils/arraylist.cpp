@@ -1,10 +1,10 @@
-#include "utils/iterator.h"
-#include "utils/list.h"
+#include "utils/arraylist.h"
+#include "utils/arraylistiterator.h"
 
 #define INITSIZE 10
 
 template <typename T>
-josh::List<T>::List() {
+josh::ArrayList<T>::ArrayList() {
   maxElts = INITSIZE;
   data = new T[maxElts];
   numElts = 0;
@@ -13,7 +13,7 @@ josh::List<T>::List() {
 }
 
 template <typename T>
-josh::List<T>::List(unsigned int initSize) {
+josh::ArrayList<T>::ArrayList(unsigned int initSize) {
   maxElts = initSize;
   data = new T[maxElts];
   numElts = 0;
@@ -22,7 +22,7 @@ josh::List<T>::List(unsigned int initSize) {
 }
 
 template <typename T>
-josh::List<T>::~List() {
+josh::ArrayList<T>::~ArrayList() {
   delete [] data;
 
   while(validIters) {
@@ -40,19 +40,19 @@ josh::List<T>::~List() {
 }
 
 template <typename T>
-const T &josh::List<T>::operator[](unsigned int index) const {
+const T &josh::ArrayList<T>::operator[](unsigned int index) const {
   checkBounds(index);
   return data[index];
 }
 
 template <typename T>
-T &josh::List<T>::operator[](unsigned int index) {
+T &josh::ArrayList<T>::operator[](unsigned int index) {
   checkBounds(index);
   return data[index];
 }
 
 template <typename T>
-void josh::List<T>::append(const T &elt) {
+void josh::ArrayList<T>::append(const T &elt) {
   while(numElts >= maxElts)
     extend();
   data[numElts++] = elt;
@@ -60,7 +60,7 @@ void josh::List<T>::append(const T &elt) {
 }
 
 template <typename T>
-josh::Iterator<T> &josh::List<T>::iterator() {
+josh::Iterator<T> &josh::ArrayList<T>::iterator() {
   iterNode *node;
   if(invalidIters) {
     node = invalidIters;
@@ -69,7 +69,7 @@ josh::Iterator<T> &josh::List<T>::iterator() {
   }
   else {
     node = new iterNode;
-    node->it = new josh::ListIterator<T>(data, numElts);
+    node->it = new josh::ArrayListIterator<T>(data, numElts);
   }
   
   node->next = validIters;
@@ -79,14 +79,14 @@ josh::Iterator<T> &josh::List<T>::iterator() {
 }
 
 template <typename T>
-void josh::List<T>::checkBounds(unsigned int index) {
+void josh::ArrayList<T>::checkBounds(unsigned int index) const {
   if(index >= numElts)
-    throw josh::ListIndexOutOfBounds();
+    throw josh::ArrayListIndexOutOfBounds();
   return;
 }
 
 template <typename T>
-void josh::List<T>::extend() {
+void josh::ArrayList<T>::extend() {
   T *newData = new T[2*maxElts+1];
   for(int i = 0; i < maxElts; i++)
     newData[i] = data[i];
@@ -95,7 +95,7 @@ void josh::List<T>::extend() {
 }
 
 template <typename T>
-void josh::List<T>::invalidateIterators() {
+void josh::ArrayList<T>::invalidateIterators() {
   while(validIters) {
     iterNode *node = validIters;
     validIters->it->invalidate();

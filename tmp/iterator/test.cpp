@@ -1,11 +1,11 @@
-#include "utils/list.h"
+#include "utils/arraylist.h"
 #include <iostream>
 
 using namespace std;
 using namespace josh;
 
 int main() {
-  List<int> list;
+  ArrayList<int> list;
   list.append(3); 
   list.append(1); 
   list.append(4); 

@@ -1,14 +1,14 @@
-#ifndef __LIST_ITERATOR_H__
-#define __LIST_ITERATOR_H__
+#ifndef __ARRAY_LIST_ITERATOR_H__
+#define __ARRAY_LIST_ITERATOR_H__
 
 #include "utils/iterator.h"
 
 namespace josh {
   
   template <typename T>
-  class ListIterator : public Iterator<T> {
+  class ArrayListIterator : public Iterator<T> {
   public: 
-    ListIterator(T *iterData, unsigned int iterSize);
+    ArrayListIterator(T *iterData, unsigned int iterSize);
     
     const T next();
     
@@ -28,8 +28,9 @@ namespace josh {
 
 }
 
-#define __LIST_ITERATOR_CPP__ "../../src/utils/listiterator.cpp"
+#define __ARRAY_LIST_ITERATOR_CPP__ \
+  "../../src/utils/arraylistiterator.cpp"
 
-#include __LIST_ITERATOR_CPP__
+#include __ARRAY_LIST_ITERATOR_CPP__
 
 #endif /* __LIST_ITERATOR_H__ */

@@ -1,19 +1,20 @@
-#ifndef __LIST_H__
-#define __LIST_H__
+#ifndef __ARRAY_LIST_H__
+#define __ARRAY_LIST_H__
 
-#include "utils/listiterator.h"
+#include "utils/arraylistiterator.h"
+#include "utils/list.h"
 
 namespace josh {
   
-  class ListIndexOutOfBounds {
+  class ArrayListIndexOutOfBounds {
   };
   
   template <typename T>
-  class List {
+  class ArrayList : public List<T> {
   public:
-    List();
-    List(unsigned int initSize);
-    ~List();
+    ArrayList();
+    ArrayList(unsigned int initSize);
+    ~ArrayList();
     
     const T &operator[](unsigned int index) const;
     T &operator[](unsigned int index);
@@ -26,11 +27,11 @@ namespace josh {
     T *data;
     unsigned int maxElts, numElts;
     
-    void checkBounds(unsigned int index);
+    void checkBounds(unsigned int index) const;
     void extend();
     
     struct iterNode {
-      ListIterator<T> *it;
+      ArrayListIterator<T> *it;
       iterNode *next;
     };
     
@@ -42,8 +43,8 @@ namespace josh {
 
 }
 
-#define __LIST_CPP__ "../../src/utils/list.cpp"
+#define __ARRAY_LIST_CPP__ "../../src/utils/arraylist.cpp"
 
-#include __LIST_CPP__
+#include __ARRAY_LIST_CPP__
 
-#endif /* __LIST_H__ */
+#endif /* __ARRAY_LIST_H__ */

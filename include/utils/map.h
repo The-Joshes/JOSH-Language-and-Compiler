@@ -2,23 +2,24 @@
 #define __MAP_H__
 
 #include <map>
+#include "container.h"
+#include "iterator.h"
 
 namespace josh
 {
   template <typename Key, typename Val>
-  class Map
+  class Map : public Container<Val>
   {
   public:
     Val &operator[](const Key key);
+    Iterator<Val> &iterator();
   private:
     std::map<Key, Val> fakeMap;
   };
 }
 
-using josh::Map;
-
 template <typename Key, typename Val>
-Val &Map<Key, Val>::operator[](const Key key)
+Val &josh::Map<Key, Val>::operator[](const Key key)
 {
   return fakeMap[key];
 }

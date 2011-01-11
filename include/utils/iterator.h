@@ -10,7 +10,7 @@ namespace josh {
   class Iterator {
   public:
     virtual const T next() = 0;
-    virtual const T hasNext() = 0;
+    virtual const bool hasNext() = 0;
     virtual const T &operator*() = 0;
   };
 

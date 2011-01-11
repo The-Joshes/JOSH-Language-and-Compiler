@@ -3,10 +3,8 @@
 
 #define INITSIZE 10
 
-using namespace josh;
-
 template <typename T>
-List<T>::List() {
+josh::List<T>::List() {
   maxElts = INITSIZE;
   data = new T[maxElts];
   numElts = 0;
@@ -15,7 +13,7 @@ List<T>::List() {
 }
 
 template <typename T>
-List<T>::List(unsigned int initSize) {
+josh::List<T>::List(unsigned int initSize) {
   maxElts = initSize;
   data = new T[maxElts];
   numElts = 0;
@@ -24,7 +22,7 @@ List<T>::List(unsigned int initSize) {
 }
 
 template <typename T>
-List<T>::~List() {
+josh::List<T>::~List() {
   delete [] data;
 
   while(validIters) {
@@ -42,19 +40,19 @@ List<T>::~List() {
 }
 
 template <typename T>
-const T &List<T>::operator[](unsigned int index) const {
+const T &josh::List<T>::operator[](unsigned int index) const {
   checkBounds(index);
   return data[index];
 }
 
 template <typename T>
-T &List<T>::operator[](unsigned int index) {
+T &josh::List<T>::operator[](unsigned int index) {
   checkBounds(index);
   return data[index];
 }
 
 template <typename T>
-void List<T>::append(const T &elt) {
+void josh::List<T>::append(const T &elt) {
   while(numElts >= maxElts)
     extend();
   data[numElts++] = elt;
@@ -62,7 +60,7 @@ void List<T>::append(const T &elt) {
 }
 
 template <typename T>
-Iterator<T> &List<T>::iterator() {
+josh::Iterator<T> &josh::List<T>::iterator() {
   iterNode *node;
   if(invalidIters) {
     node = invalidIters;
@@ -71,7 +69,7 @@ Iterator<T> &List<T>::iterator() {
   }
   else {
     node = new iterNode;
-    node->it = new ListIterator<T>(data, numElts);
+    node->it = new josh::ListIterator<T>(data, numElts);
   }
   
   node->next = validIters;
@@ -81,14 +79,14 @@ Iterator<T> &List<T>::iterator() {
 }
 
 template <typename T>
-void List<T>::checkBounds(unsigned int index) {
+void josh::List<T>::checkBounds(unsigned int index) {
   if(index >= numElts)
-    throw ListIndexOutOfBounds();
+    throw josh::ListIndexOutOfBounds();
   return;
 }
 
 template <typename T>
-void List<T>::extend() {
+void josh::List<T>::extend() {
   T *newData = new T[2*maxElts+1];
   for(int i = 0; i < maxElts; i++)
     newData[i] = data[i];
@@ -97,7 +95,7 @@ void List<T>::extend() {
 }
 
 template <typename T>
-void List<T>::invalidateIterators() {
+void josh::List<T>::invalidateIterators() {
   while(validIters) {
     iterNode *node = validIters;
     validIters->it->invalidate();

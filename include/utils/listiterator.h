@@ -12,7 +12,7 @@ namespace josh {
     
     const T next();
     
-    const T hasNext();
+    const bool hasNext();
     
     const T &operator*();
     

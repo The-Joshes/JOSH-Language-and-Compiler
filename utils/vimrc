@@ -31,3 +31,8 @@ map su :!svn update<CR>
 "folding
 :noremap f zfa{
 :noremap o zo
+
+"prevents weird color changes when opening files and pressing first key
+if &term =~ "xterm"
+    set t_Co=256
+endif

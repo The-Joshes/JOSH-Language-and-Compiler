@@ -22,3 +22,6 @@ $(OUT): $(OBJ)
 
 %.d: %.cpp
 	./depend.sh `dirname $*.cpp` $(CFLAGS) $*.cpp > $@
+
+clean: 
+	rm $(OBJ) $(OUT)

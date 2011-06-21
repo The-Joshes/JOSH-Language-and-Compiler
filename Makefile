@@ -13,6 +13,8 @@ OUT := bin/josh
 
 include $(patsubst %, %/module.mk, $(MODULES))
 
+TOLOAD := $(patsubst %, -l%, $(LIBS))
+
 %.d: %.cpp
 	./depend.sh `dirname $*.cpp` $(CPPFLAGS) $*.cpp > $@
 
@@ -23,7 +25,7 @@ OBJ := \
     $(filter %.y, $(SRC)))
 
 $(OUT): $(OBJ)
-	$(CXX) $(CPPFLAGS) -o $@ $(OBJ) $(LIBS)
+	$(CXX) $(CPPFLAGS) -o $@ $(OBJ) $(TOLOAD)
 
 clean: 
 	rm $(OBJ) $(OUT)

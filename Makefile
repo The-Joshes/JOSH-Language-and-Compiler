@@ -3,7 +3,6 @@
 
 MODULES := src/josh
 
-CPPFLAGS += $(patsubst %, -I%, $(MODULES))
 CPPFLAGS += -Iinclude/ 
 
 LIBS :=
@@ -14,6 +13,9 @@ OUT := bin/josh
 
 include $(patsubst %, %/module.mk, $(MODULES))
 
+%.d: %.cpp
+	./depend.sh `dirname $*.cpp` $(CPPFLAGS) $*.cpp > $@
+
 OBJ := \
     $(patsubst %.cpp, %.o,   \
     $(filter %.cpp, $(SRC))) \
@@ -22,9 +24,6 @@ OBJ := \
 
 $(OUT): $(OBJ)
 	$(CXX) $(CPPFLAGS) -o $@ $(OBJ) $(LIBS)
-
-%.d: %.cpp
-	./depend.sh `dirname $*.cpp` $(CPPFLAGS) $*.cpp > $@
 
 clean: 
 	rm $(OBJ) $(OUT)

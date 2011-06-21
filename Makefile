@@ -1,3 +1,6 @@
+# Based on the paper "Recrusive Make Considered Harmful" by Peter Miller
+# http://miller.emu.id.au/pmiller/books/rmch/
+
 MODULES := src/josh
 
 CPPFLAGS += $(patsubst %, -I%, $(MODULES))

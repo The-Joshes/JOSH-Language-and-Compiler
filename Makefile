@@ -24,7 +24,7 @@ $(OUT): $(OBJ)
 	$(CXX) $(CPPFLAGS) -o $@ $(OBJ) $(LIBS)
 
 %.d: %.cpp
-	./depend.sh `dirname $*.cpp` $(CFLAGS) $*.cpp > $@
+	./depend.sh `dirname $*.cpp` $(CPPFLAGS) $*.cpp > $@
 
 clean: 
 	rm $(OBJ) $(OUT)

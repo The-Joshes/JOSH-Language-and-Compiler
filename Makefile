@@ -18,14 +18,11 @@ TOLOAD := $(patsubst %, -l%, $(LIBS))
 %.d: %.cpp
 	./depend.sh `dirname $*.cpp` $(CPPFLAGS) $*.cpp > $@
 
-OBJ := \
-    $(patsubst %.cpp, %.o,   \
-    $(filter %.cpp, $(SRC))) \
-    $(patsubst %.y, %.o,   \
-    $(filter %.y, $(SRC)))
+OBJ := $(patsubst %.cpp, %.o, $(filter %.cpp, $(SRC))) 
 
 $(OUT): $(OBJ)
 	$(CXX) $(CPPFLAGS) -o $@ $(OBJ) $(TOLOAD)
 
+.PHONY: clean
 clean: 
-	rm $(OBJ) $(OUT)
+	rm -f $(OBJ) $(OUT)

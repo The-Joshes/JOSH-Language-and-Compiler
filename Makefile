@@ -15,14 +15,16 @@ include $(patsubst %, %/module.mk, $(MODULES))
 
 TOLOAD := $(patsubst %, -l%, $(LIBS))
 
-%.d: %.cpp
-	./depend.sh `dirname $*.cpp` $(CPPFLAGS) $*.cpp > $@
-
 OBJ := $(patsubst %.cpp, %.o, $(filter %.cpp, $(SRC))) 
 
 $(OUT): $(OBJ)
-	$(CXX) $(CPPFLAGS) -o $@ $(OBJ) $(TOLOAD)
+	@$(CXX) $(CPPFLAGS) -o $@ $(OBJ) $(TOLOAD)
+
+-include $(OBJ:.o=.d)
+
+%.d: %.cpp
+	$(CXX) -MM -MG $(CPPFLAGS) $^ | sed -e 's@^\(.*\)\.o:@\1.d \1.o:@' > $@
 
 .PHONY: clean
 clean: 
-	rm -f $(OBJ) $(OUT)
+	rm -f $(OBJ) $(OBJ:.o=.d) $(OUT)

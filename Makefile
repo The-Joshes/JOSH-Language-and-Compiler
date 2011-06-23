@@ -2,6 +2,7 @@
 # http://miller.emu.id.au/pmiller/books/rmch/
 
 MODULES := src/josh
+VPATH := src/josh
 
 CPPFLAGS += -Iinclude/ 
 
@@ -16,6 +17,7 @@ include $(patsubst %, %/module.mk, $(MODULES))
 TOLOAD := $(patsubst %, -l%, $(LIBS))
 
 OBJ := $(patsubst %.cpp, %.o, $(filter %.cpp, $(SRC))) 
+DEPS := $(patsubst %.cpp, %.d, $(filter %.cpp, $(SRC))) 
 
 $(OUT): $(OBJ)
 	@$(CXX) $(CPPFLAGS) -o $@ $(OBJ) $(TOLOAD)
@@ -23,8 +25,8 @@ $(OUT): $(OBJ)
 -include $(OBJ:.o=.d)
 
 %.d: %.cpp
-	$(CXX) -MM -MG $(CPPFLAGS) $^ | sed -e 's@^\(.*\)\.o:@\1.d \1.o:@' > $@
+	$(CXX) -MM -MG $(CPPFLAGS) $^  | sed -e 's@^\(.*\)\.o:@\1.d \1.o:@' > $@
 
-.PHONY: clean
 clean: 
-	rm -f $(OBJ) $(OBJ:.o=.d) $(OUT)
+	rm -f *.o *.d $(OUT)
+

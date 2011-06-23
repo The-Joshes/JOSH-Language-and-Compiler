@@ -8,7 +8,7 @@ if [ "$CUR_PATH" = "" ]; then
 fi
 
 for CASE in $CASES; do
-  ./$CASE $CUR_PATH/$CASE			
+  $PWD/$CASE
   if [ $? != 0 ]; then
     echo $CUR_PATH/$CASE "failed"
   fi

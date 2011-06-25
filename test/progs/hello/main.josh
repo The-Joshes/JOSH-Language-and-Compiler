@@ -1,0 +1,10 @@
+int main()
+{
+    // the compiler knows to look in standard/io to find the code for cout
+    standard::io::cout << "Hello, world!\n";
+    
+    // the compiler knows to look in function to find the code for farewell()
+    function::farewell();
+
+    return 0;
+}

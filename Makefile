@@ -17,16 +17,15 @@ include $(patsubst %, %/module.mk, $(MODULES))
 TOLOAD := $(patsubst %, -l%, $(LIBS))
 
 OBJ := $(patsubst %.cpp, %.o, $(filter %.cpp, $(SRC))) 
-DEPS := $(patsubst %.cpp, %.d, $(filter %.cpp, $(SRC))) 
 
 $(OUT): $(OBJ)
 	@$(CXX) $(CPPFLAGS) -o $@ $(OBJ) $(TOLOAD)
 
--include $(OBJ:.o=.d)
+clean: 
+	rm -f $(OBJ) $(OBJ:.o=.d)  $(OUT)
 
 %.d: %.cpp
 	$(CXX) -MM -MG $(CPPFLAGS) $^  | sed -e 's@^\(.*\)\.o:@\1.d \1.o:@' > $@
 
-clean: 
-	rm -f *.o *.d $(OUT)
+-include $(OBJ:.o=.d)
 

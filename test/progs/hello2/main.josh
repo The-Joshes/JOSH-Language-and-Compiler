@@ -1,0 +1,18 @@
+import "io"
+import "function"
+
+use fnct;
+
+int main()
+{
+    // the compiler knows to look in standard/io to find the code for cout
+    io::cout << "Hello, world!\n";
+    
+    // This will print "Good bye, world!\n"
+    fxn::farewell();
+
+    // this will print "Have a good day, world!\n"
+    farewell();
+
+    return 0;
+}

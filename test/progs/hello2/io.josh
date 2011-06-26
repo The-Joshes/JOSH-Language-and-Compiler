@@ -1,0 +1,7 @@
+// Standard namespace for I/O
+namespace io {
+    // This function prints stuff, because it's awesome
+    ostream &operator << (ostream &out, const stringliteral &str) {
+        // Printing stuff...
+    }
+}

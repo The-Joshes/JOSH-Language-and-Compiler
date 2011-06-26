@@ -1,17 +1,10 @@
 // the compiler now knows to look for "standard/io"
 // it then allows the code in this file to be used as if it was defined locally
-import "standard/io";
-
-namespace fxn
-{
-    void farewell()
-    {
-        // since "standard/io" was imported, no need to specify the scope anymore
-        cout << "Good bye, world!\n";
-    }
-}
+import "io";
 
 void farewell()
 {
-    cout << "Have a good day, world!\n";
+    // since "standard/io" was imported, no need to specify the scope anymore
+    cout << "Good bye, world!\n";
 }
+

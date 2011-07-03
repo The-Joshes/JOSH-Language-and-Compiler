@@ -3,8 +3,18 @@ int main()
     // the compiler knows to look in standard/io to find the code for cout
     standard::io::cout << "Hello, world!\n";
     
-    // the compiler knows to look in function to find the code for farewell()
-    function::farewell();
+    // the compiler knows to look in folder/function to find the code for farewell()
+    folder::function::farewell();
+
+    /* alternative 1:
+     * import folder;
+     * function::farewell();
+     */
+
+    /* alternative 2:
+     * import folder/function;
+     * farewell();
+     */
 
     return 0;
 }

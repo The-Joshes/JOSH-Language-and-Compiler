@@ -2,10 +2,20 @@
 
 #include <iostream>
 
-namespace josh {
-  
-  void ir_optimize() {
-    std::cout << "Optimizing IR...\n";
+namespace josh 
+{
+  void optimize_highlevel()
+  {
+      std::cout << "optimizing high level IR...\n";
   }
-  
+
+  void highlevel_to_lowlevel()
+  {
+      std::cout << "translating highlevel IR to low level IR...\n";
+  }
+
+  void optimize_lowlevel()
+  {
+      std::cout << "optimizing low level IR...\n";
+  }
 }

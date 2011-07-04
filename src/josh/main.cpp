@@ -1,5 +1,6 @@
 #include "josh/ast/ast.h" 
 #include "josh/ir/ir.h"
+#include "josh/system/system.h"
 #include "josh/token/token.h"
 
 using namespace josh;
@@ -8,5 +9,15 @@ int main() {
   get_tokens();
   AST ast;
   ast.createIR();
-  ir_optimize();
+
+  optimize_highlevel();
+  highlevel_to_lowlevel();
+  optimize_lowlevel();
+
+  lowlevel_to_assembly();
+  assemble();
+  //link(); // you don't both link and save to file
+  save_to_file();
+
+  return 0;
 }

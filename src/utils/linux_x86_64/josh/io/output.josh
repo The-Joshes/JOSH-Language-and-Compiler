@@ -1,0 +1,13 @@
+package josh.io;
+
+public void puts(char *msg, int len)
+{
+  system_puts(msg, len);
+}
+
+public void puts(char *msg)
+{
+  int len = strlen(msg);
+  system_puts(msg, len);
+}
+

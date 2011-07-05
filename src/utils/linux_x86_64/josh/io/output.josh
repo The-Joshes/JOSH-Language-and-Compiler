@@ -7,7 +7,7 @@ public void puts(char *msg, int len)
 
 public void puts(char *msg)
 {
-  int len = strlen(msg);
+  int len = josh:utils:string:strlen(msg);
   system_puts(msg, len);
 }
 

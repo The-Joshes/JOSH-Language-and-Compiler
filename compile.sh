@@ -7,7 +7,7 @@ then
     exit $?
 fi
 
-if [ "$1" == "first" ]
+if [ "$1" == "init" ]
 then
     ./configure --prefix=$PWD/build
 fi

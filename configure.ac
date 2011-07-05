@@ -11,9 +11,8 @@ AC_CONFIG_FILES([
  src/Makefile
  src/josh/Makefile
  src/josh/ast/Makefile
+ src/josh/ir/Makefile
+ src/josh/system/Makefile
  src/josh/token/Makefile
 ])
 AC_OUTPUT
-
-# src/josh/ir/Makefile
-# src/josh/system/Makefile

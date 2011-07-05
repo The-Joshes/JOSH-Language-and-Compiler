@@ -1,6 +1,6 @@
 #include "josh/ast/ast.h" 
-//#include "josh/ir/ir.h"
-//#include "josh/system/system.h"
+#include "josh/ir/ir.h"
+#include "josh/system/system.h"
 #include "josh/token/token.h"
 #include <iostream>
 #include "config.h"
@@ -16,14 +16,14 @@ int main() {
   AST ast;
   ast.createIR();
 
-  /* optimize_highlevel();
+  optimize_highlevel();
   highlevel_to_lowlevel();
   optimize_lowlevel();
 
   lowlevel_to_assembly();
   assemble();
   //link(); // you don't both link and save to file
-  save_to_file();*/
+  save_to_file();
 
   return 0;
 }

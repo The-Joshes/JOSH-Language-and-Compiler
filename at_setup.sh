@@ -3,7 +3,7 @@
 if [ "$1" == "init" ]
 then
     autoreconf --install
-elif [ "$1" == "remove" ]
+elif [ "$1" == "clean" ]
 then
     rm -r configure Makefile.in depcomp config.guess config.sub ltmain.sh \
 	autom4te.cache missing aclocal.m4 install-sh m4/ltsugar.m4 \

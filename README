@@ -1,0 +1,60 @@
+********************************************************************************
+Setting up autotools and compiling
+********************************************************************************
+The first thing you need to do is make sure that you have autotools and libtool
+installed.
+
+Then, run 
+$ ./at_setup.sh init
+
+Which is the same as
+$ autoreconf --install
+
+This will generate the configure file, as well as a metric ton of other files 
+(they are actually listed in at_setup.sh, if you care), such as Makefile.in
+and m4/a-whole-bunch-of-stuff. 
+
+Next, run
+$ ./compile.sh init
+
+That is equivalent to
+$ ./configure --prefix=$PWD/build
+$ make && make install
+
+Congrats, you have installed jcomp (which would be called josh if there weren't
+already a directory in src/ called josh). To run it, you can either do
+$ build/bin/jcomp
+
+or
+$ ./run.sh
+
+********************************************************************************
+Recompiling
+********************************************************************************
+This is easy. If you've changed something in the code and want to recompile, 
+then at the root of our project, run 
+$ ./compile
+
+That is the same as
+$ make && make install
+
+********************************************************************************
+Cleaning up
+********************************************************************************
+
+To clean up, run
+$ ./compile.sh clean
+
+That is equivalent to
+$ make uninstall
+$ make distclean
+
+And it removes executables, object files, and the like - basically, restores 
+our code to the point AFTER calling ./at_setup.sh init. That is, configure,
+m4/stuff, and all the rest are still there. 
+
+To completely clean up - that is - restore your code to the point where svn st
+actually gives you meaningful output, use
+$ ./at_setup.sh clean
+
+That removes all of the auto-generated files. At least, it does on my system...

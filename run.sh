@@ -1,1 +1,1 @@
-build/bin/jcomp
+build/bin/jcomp $@

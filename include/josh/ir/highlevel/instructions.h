@@ -4,7 +4,6 @@
 #include "josh/ir/instruction.h"
 
 #include <cstring> // for NULL
-#include <utility>
 
 class BasicBlock;
 class PointerType;
@@ -24,6 +23,8 @@ public:
   /// List of binary operators.\n
   /// Arithmetic: ADD, SUBTRACT, MULTIPLY, DIVIDE.\n
   /// Compare: LESS_THAN, GREATER_THAN, LESS_OR_EQUAL, GREATER_OR_EQUAL, EQUAL, NOT_EQUAL.
+  /// Compare Insts always have a Type of Integer, regardless of the Type of its operators.
+  /// To see a BinaryInst's operator Type, @see getOpType()
   enum BinaryOp
   {
     ADD,                /*!< A = (X + Y)  */  
@@ -43,7 +44,7 @@ public:
   static bool isOpCompare(BinaryOp op);    ///< returns true if op is compare;
                                            ///< returns false otherwise
 
-  //  CreateBinaryInst(BinaryOp, Value*, Value*)
+  //  Create(BinaryOp, Value*, Value*)
   /// Create a new BinaryInst of the form (val) = (lhs) op (rhs).
   /// If lhs and rhs do not have the same BaseType, 0 is asserted.
   /// If the op is arithmetic, the new BinaryInst has the same BaseType as lhs and rhs.
@@ -63,7 +64,7 @@ public:
   bool isCompare();    ///< returns true if this BinaryInst is compare 
 
   BinaryOp getBinaryOp(); ///< returns this instruction's op
-  Type *getOpType();      ///< returns the type of the operator
+  Type *getOpType();      ///< returns the type of the inst's operators
 
   Value *getLHS(); ///< returns the Value corresponding to the lhs of the BinaryInst
   Value *getRHS(); ///< returns the Value corresponding to the rhs of the BinaryInst
@@ -96,17 +97,41 @@ public:
   /// Ops available for a TerminatorInst
   enum TerminatorOp
   {
-    RETURN, BRANCH
+    RETURN, UNCONDITIONAL_BRANCH, CONDITIONAL_BRANCH
   };
+
+  //  CreateBranch(BasicBlock*, BasicBlock*, Value*)
+  /// Create a new Branching Instruction.
+  /// If jumpToOnFalse is NULL or condition is NULL, an unconditional branch is created.
+  /// Otherwise, a conditional branch is created.
+  /// A non-NULL condition's Type must be Integer, else 0 is asserted.
+  /// If condition is NULL or evaluated at run time to be non-zero, BB jumpToOnTrue is branched to.
+  /// Else if condition is evaluated at run time to be zero, BB jumpToOnFalse is branched to.
+  /// TerminatorOp's Type is set to void.
+  static TerminatorInst* CreateBranch(BasicBlock *jumpToOnTrue,
+                                      BasicBlock *jumpToOnFalse = NULL,
+                                      Value *condition = NULL);
+
+  //  CreateReturn(Value*)
+  /// Creates an Instruction to return from a CallInst.
+  /// If returnVal is NULL, TerminatorInst's Type is set to void.
+  static TerminatorInst* CreateReturn(Value* returnVal = NULL);
+
+  TerminatorOp getTerminatorOp(); ///< returns this instruction's op
+
+protected:
+
 private:
+  TerminatorOp op; ///< @see getTerminatorOp()
+  BasicBlock *jumpToOnTrue, *jumpToOnFalse;
+  Value *condition;
+  Value *returnVal;
 };
 
   /***************************************************************************
    *                           CallInst                                      *
    ***************************************************************************/
-/// Instruction that calls a function.  Takes on the Type of the function's
-/// return Value.  Thus if the function returns void, this Value is of Type
-/// void and cannot be used by subsequent Instructions.
+/// Instruction that calls a function.  
 class CallInst : public Instruction
 {
 public:
@@ -119,7 +144,7 @@ private:
 /// A PhiNode Instruction ('phi function') makes SSA form possible by
 /// allowing a Value to take value based on where flow of control
 /// came from.  For a given PhiNode, every successor basic block to the
-/// PhiNode's parent basic block must be represented by a (path, value) pair.
+/// basic block the PhiNode is in must be represented by a (path, value) pair.
 class PhiNode : public Instruction
 {
 public:
@@ -131,7 +156,8 @@ public:
 
   //  CreateEmpty(Type*)
   /// Creates an empty PhiNode to be filled in later.  
-  /// Not a valid Instruction to PhiNode's parent block (see class description).
+  /// This Instruction is not considered valid until all appropriate paths to
+  /// the PhiNode's containing basic block are filled in with a (path, value) pair.
   static PhiNode* CreateEmpty(Type *type);
 
   //  getNumPairs()
@@ -219,13 +245,14 @@ class LoadInst : public Instruction
 public:
   //  Create(Value*)
   /// Returns a new LoadInst that loads a Value from address.
-  /// Asserts 0 if address's Type is not a pointer
+  /// Asserts 0 if address's Type is not a pointer.
+  /// Takes on the Type that address points to.
   static LoadInst* Create(Value *address);
 
   Value *getAddress();     ///< returns the address to which this is loading from
   void setAddress(Value*); ///< sets the Value to which this instruction stores to
                            ///< asserts 0 if the Value's Type is not a pointer
-                           ///< asserts 0 if the Type is different
+                           ///< asserts 0 if the address' pointed to Type is different from the instruction's Type
 
 protected:
   //  Constructor
@@ -238,16 +265,23 @@ private:
   /***************************************************************************
    *                          AllocaInst                                     *
    ***************************************************************************/
-/// Allocates a piece of memory on the stack.
+/// Allocates a piece of memory.
 class AllocaInst : public Instruction
 {
 public:
-  static AllocaInst* Create(Type *type);
-  static AllocaInst* CreateArray(Type *type, Value *arraySize);
+  //  Create(Type*, Value*)
+  /// Creates an Instruction to allocate a piece of memory.
+  /// If an Array of types is needed, a non-NULL Value of Type Integer
+  /// must be passed in; otherwise, 0 is asserted.
+  /// Otherwise, only enough space for 1 type is created.
+  /// The Value of AllocaInst is a pointer which points to the allocated space.
+  static AllocaInst* Create(Type *type, Value *arraySize = NULL);
 
-  Value *getArraySize(); ///< size of array, must be of Type int;
-                         ///< NULL means array size of 1 (no array!)
-
+  //  getArraySize()
+  /// Returns a Value of Type Integer detailing the amount of space allocated.
+  /// If an array wasn't created, Value will reduce to a Constant of value 1
+  Value *getArraySize(); 
+                        
 protected:
   AllocaInst(Type *type, Value *arraySize = NULL);
 

@@ -38,7 +38,6 @@ public:
   /// Returns an Iterator containing all Values which depend on this Value.
   /// An empty Iterator implies this Value is never used.
   josh::Iterator<Value*>& getUsers();
-  int getNumUsers(); ///< returns the number of Values that use this Value
  
   //  getUses()
   /// Returns an Iterator containing all Values that this Value depends on.

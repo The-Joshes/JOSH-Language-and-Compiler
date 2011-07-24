@@ -13,8 +13,7 @@ public:
   enum BaseType
   {
     VOID, INTEGER, DECIMAL,
-    POINTER, ARRAY, CUSTOM,
-    ERROR
+    POINTER, ARRAY, COMPLEX
   };
 
   //  getBaseType()
@@ -23,23 +22,10 @@ public:
   /// (type->getBaseType() == Type::INTEGER)
   BaseType getBaseType() const;
 
-  //  equals(Type*)
-  /// returns true if this and the passed in Type are equivalent; false otherwise
-  virtual bool equals(Type*) const;
-
-  /// JUST TO COMPILE, WILL REMOVE
-  static Type* GetVoidType() { return 0;}
 protected:
 
 private:
   BaseType baseType; ///< the exact type this Type describes @see getBaseType()
-};
-
-/// ONLY HERE FOR TESTING/COMPILING REASONS, WILL MOVE SOON 
-class PointerType : public Type 
-{
-public:
-  Type* getPointedToType() {return this;} 
 };
 
 #endif

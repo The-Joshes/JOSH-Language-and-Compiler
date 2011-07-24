@@ -44,12 +44,12 @@ public:
   static bool isOpCompare(BinaryOp op);    ///< returns true if op is compare;
                                            ///< returns false otherwise
 
-  //  Create(BinaryOp, Value*, Value*)
+  //  Create(BinaryOp, Value*, Value*, BasicBlock*)
   /// Create a new BinaryInst of the form (val) = (lhs) op (rhs).
   /// If lhs and rhs do not have the same BaseType, 0 is asserted.
   /// If the op is arithmetic, the new BinaryInst has the same BaseType as lhs and rhs.
   /// If the op is a compare, the new BinaryInst has a BaseType of Integer.
-  static BinaryInst* Create(BinaryOp op, Value *lhs, Value *rhs);
+  static BinaryInst* Create(BinaryOp op, Value *lhs, Value *rhs, BasicBlock *insertAtEnd=NULL);
 
   /***************************************************************************
    *                           Member functions                              *
@@ -76,7 +76,7 @@ public:
 protected:
   // Constructor
   /// Requires the instruction's op, type, and operatorType
-  BinaryInst(BinaryOp, Type *type, Type *operatorType);
+  BinaryInst(BinaryOp, Type *type, Type *operatorType, BasicBlock *insertAtEnd);
 
 private:
   bool arithmetic;
@@ -100,7 +100,7 @@ public:
     RETURN, UNCONDITIONAL_BRANCH, CONDITIONAL_BRANCH
   };
 
-  //  CreateBranch(BasicBlock*, BasicBlock*, Value*)
+  //  CreateBranch(BasicBlock*, BasicBlock*, Value*, BasicBlock*)
   /// Create a new Branching Instruction.
   /// If jumpToOnFalse is NULL or condition is NULL, an unconditional branch is created.
   /// Otherwise, a conditional branch is created.
@@ -110,16 +110,19 @@ public:
   /// TerminatorOp's Type is set to void.
   static TerminatorInst* CreateBranch(BasicBlock *jumpToOnTrue,
                                       BasicBlock *jumpToOnFalse = NULL,
-                                      Value *condition = NULL);
+                                      Value *condition = NULL, 
+                                      BasicBlock *insertAtEnd=NULL);
 
-  //  CreateReturn(Value*)
+  //  CreateReturn(Value*, BasicBlock*)
   /// Creates an Instruction to return from a CallInst.
   /// If returnVal is NULL, TerminatorInst's Type is set to void.
-  static TerminatorInst* CreateReturn(Value* returnVal = NULL);
+  static TerminatorInst* CreateReturn(Value* returnVal = NULL, BasicBlock *insertAtEnd=NULL);
 
   TerminatorOp getTerminatorOp(); ///< returns this instruction's op
 
 protected:
+  TerminatorInst(TerminatorOp op, BasicBlock *jumpToOnTrue, BasicBlock *jumpToOnFalse,
+                 Value *condition, Value *returnVal, BasicBlock *insertAtEnd);
 
 private:
   TerminatorOp op; ///< @see getTerminatorOp()
@@ -148,17 +151,19 @@ private:
 class PhiNode : public Instruction
 {
 public:
-  //  Create(Iterator<Value*>, Iterator<BasicBlock*>)
+  //  Create(Iterator<Value*>, Iterator<BasicBlock*>, BasicBlock*)
   /// Creates a PhiNode that determines value based on flow.
   /// All Values in values must have the same Type, else 0 is asserted.
   /// The PhiNode's Value is equivalent to the Type of any of the values.
-  static PhiNode* Create(Iterator<Value*> &values, Iterator<BasicBlock*> &paths);
+  static PhiNode* Create(Iterator<Value*> &values, 
+                         Iterator<BasicBlock*> &paths, 
+                         BasicBlock *insertAtEnd=NULL);
 
-  //  CreateEmpty(Type*)
+  //  CreateEmpty(Type*, BasicBlock*)
   /// Creates an empty PhiNode to be filled in later.  
   /// This Instruction is not considered valid until all appropriate paths to
   /// the PhiNode's containing basic block are filled in with a (path, value) pair.
-  static PhiNode* CreateEmpty(Type *type);
+  static PhiNode* CreateEmpty(Type *type, BasicBlock *insertAtEnd=NULL);
 
   //  getNumPairs()
   /// returns the number of (Value*, BasicBlock*) pairs that 
@@ -197,7 +202,7 @@ public:
   
 protected:
   //  Constructor
-  PhiNode(Type *type);
+  PhiNode(Type *type, BasicBlock *insertAtEnd);
 
 private:
   //  pairs
@@ -214,11 +219,11 @@ private:
 class StoreInst : public Instruction
 {
 public:
-  //  Create(Value *toStore, Value *address)
+  //  Create(Value *toStore, Value *address, BasicBlock*)
   /// Returns a new StoreInst that stores Value toStore at location address.
   /// Asserts 0 if address's Type is not a pointer.
   /// Asserts 0 if the Type address's Type points to is not equal to Value's Type.
-  static StoreInst* Create(Value *toStore, Value *address);
+  static StoreInst* Create(Value *toStore, Value *address, BasicBlock *insertAtEnd=NULL);
 
   Value* getStoredValue(); ///< returns the Value which this is storing
   void setStoredValue(Value*);
@@ -227,7 +232,7 @@ public:
 
 protected:
   //  Constructor
-  StoreInst(PointerType *addressType);
+  StoreInst(PointerType *addressType, BasicBlock *insertAtEnd);
 
 private:
   Value *toStore;
@@ -243,11 +248,11 @@ private:
 class LoadInst : public Instruction
 {
 public:
-  //  Create(Value*)
+  //  Create(Value*, BasicBlock*)
   /// Returns a new LoadInst that loads a Value from address.
   /// Asserts 0 if address's Type is not a pointer.
   /// Takes on the Type that address points to.
-  static LoadInst* Create(Value *address);
+  static LoadInst* Create(Value *address, BasicBlock *insertAtEnd=NULL);
 
   Value *getAddress();     ///< returns the address to which this is loading from
   void setAddress(Value*); ///< sets the Value to which this instruction stores to
@@ -256,7 +261,7 @@ public:
 
 protected:
   //  Constructor
-  LoadInst(PointerType *addressType);
+  LoadInst(PointerType *addressType, BasicBlock *insertAtEnd);
 
 private:
   Value *address;
@@ -269,21 +274,24 @@ private:
 class AllocaInst : public Instruction
 {
 public:
-  //  Create(Type*, Value*)
+  //  CreateArray(Type*, Value*, BasicBlock*)
   /// Creates an Instruction to allocate a piece of memory.
-  /// If an Array of types is needed, a non-NULL Value of Type Integer
-  /// must be passed in; otherwise, 0 is asserted.
-  /// Otherwise, only enough space for 1 type is created.
+  /// arraySize must be of type Integer.
   /// The Value of AllocaInst is a pointer which points to the allocated space.
-  static AllocaInst* Create(Type *type, Value *arraySize = NULL);
+  static AllocaInst* CreateArray(Type *type, Value *arraySize, BasicBlock *insertAtEnd=NULL);
+
+  //  Create(Type*, BasicBlock*)
+  /// Creates an Instruction to allocate a piece of memory.
+  /// The Value of AllocaInst is a pointer which points to the allocated space.
+  static AllocaInst* Create(Type *type, BasicBlock *insertAtEnd=NULL);
 
   //  getArraySize()
   /// Returns a Value of Type Integer detailing the amount of space allocated.
-  /// If an array wasn't created, Value will reduce to a Constant of value 1
+  /// If a non-array pointer was created, the array size will be a Constant of value 1
   Value *getArraySize(); 
                         
 protected:
-  AllocaInst(Type *type, Value *arraySize = NULL);
+  AllocaInst(Type *type, Value *arraySize, BasicBlock *insertAtEnd);
 
 private:
   Value *arraySize; ///< @see getArraySize()

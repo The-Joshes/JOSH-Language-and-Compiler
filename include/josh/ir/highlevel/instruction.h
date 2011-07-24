@@ -3,6 +3,8 @@
 
 #include "josh/ir/value.h"
 
+class BasicBlock;
+
 /// class Instruction
 /// represents all Values which must be computed at run time
 /**
@@ -20,13 +22,18 @@ public:
 
   InstCategory getInstCategory();
 
+  BasicBlock *getParent();
+  void setParent(BasicBlock*);
+
 protected:
   // Constructor
   /// requires the instruction's type and its category
-  Instruction(Type*, InstCategory);
+  /// if insertAtEnd is NULL, does not put into a BB
+  Instruction(Type*, InstCategory, BasicBlock *insertAtEnd);
 
 private:
   InstCategory instCat;
+  BasicBlock *parent;
 };
 
 #endif

@@ -1,9 +1,10 @@
 #ifndef __INSTRUCTIONS_H__
 #define __INSTRUCTIONS_H__
 
-#include "josh/ir/instruction.h"
+#include "josh/ir/highlevel/instruction.h"
 
 #include <cstring> // for NULL
+#include <utility> // for pair
 
 class BasicBlock;
 class PointerType;
@@ -155,8 +156,8 @@ public:
   /// Creates a PhiNode that determines value based on flow.
   /// All Values in values must have the same Type, else 0 is asserted.
   /// The PhiNode's Value is equivalent to the Type of any of the values.
-  static PhiNode* Create(Iterator<Value*> &values, 
-                         Iterator<BasicBlock*> &paths, 
+  static PhiNode* Create(josh::Iterator<Value*> &values, 
+                         josh::Iterator<BasicBlock*> &paths, 
                          BasicBlock *insertAtEnd=NULL);
 
   //  CreateEmpty(Type*, BasicBlock*)

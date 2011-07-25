@@ -10,7 +10,7 @@ class TerminatorInst;
 /// represents a segment of code that can be entered from the beginning or 
 /// exited from the end, but cannot be entered or exited from
 /// at any other point.
-class BasicBlock extends josh::List<Instruction*>
+class BasicBlock : public josh::List<Instruction*>
 {
 public:
   const josh::List<BasicBlock*>& getPreds(); ///< retrieve the list of predecessors
@@ -19,6 +19,7 @@ public:
 private:
   josh::List<BasicBlock*> preds, succs;
   josh::List<Instruction*> insts;
+  
 };
 
 #endif

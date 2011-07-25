@@ -1,7 +1,7 @@
 #ifndef __INSTRUCTION_H__
 #define __INSTRUCTION_H__
 
-#include "josh/ir/value.h"
+#include "josh/ir/highlevel/value.h"
 
 class BasicBlock;
 

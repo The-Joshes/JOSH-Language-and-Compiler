@@ -4,9 +4,9 @@
 #include "josh/ir/highlevel/instruction.h"
 
 #include <cstring> // for NULL
-#include <utility> // for pair
 
 class BasicBlock;
+class Function;
 class PointerType;
 
   /***************************************************************************
@@ -20,7 +20,6 @@ public:
    *                           Static members                                *
    ***************************************************************************/
   
-  //  enum BinaryOp
   /// List of binary operators.\n
   /// Arithmetic: ADD, SUBTRACT, MULTIPLY, DIVIDE.\n
   /// Compare: LESS_THAN, GREATER_THAN, LESS_OR_EQUAL, GREATER_OR_EQUAL, EQUAL, NOT_EQUAL.
@@ -45,18 +44,17 @@ public:
   static bool isOpCompare(BinaryOp op);    ///< returns true if op is compare;
                                            ///< returns false otherwise
 
-  //  Create(BinaryOp, Value*, Value*, BasicBlock*)
   /// Create a new BinaryInst of the form (val) = (lhs) op (rhs).
   /// If lhs and rhs do not have the same BaseType, 0 is asserted.
   /// If the op is arithmetic, the new BinaryInst has the same BaseType as lhs and rhs.
-  /// If the op is a compare, the new BinaryInst has a BaseType of Integer.
+  /// If the op is a compare, the new BinaryInst has a Type of Integer.
+  /// If the op is not defined for the operator Types, 0 is asserted.
   static BinaryInst* Create(BinaryOp op, Value *lhs, Value *rhs, BasicBlock *insertAtEnd=NULL);
 
   /***************************************************************************
    *                           Member functions                              *
    ***************************************************************************/
   
-  //  canBeComputedAtCompileTime()
   /// returns true if this Instruction's value can be computed at compile time,
   /// returns false otherwise.
   bool canBeComputedAtCompileTime();
@@ -75,15 +73,13 @@ public:
   void setRHS(Value*); ///< changes the rhs Value.
                        ///< asserts 0 if the new Value has a differing Type.
 protected:
-  // Constructor
-  /// Requires the instruction's op, type, and operatorType
   BinaryInst(BinaryOp, Type *type, Type *operatorType, BasicBlock *insertAtEnd);
 
 private:
   bool arithmetic;
-  BinaryOp op; ///< @see getBinaryOp()
-  Type *opType; ///< Type of the operators
-  Value *lhs, *rhs; ///< lhs and rhs values of the binary instruction
+  BinaryOp op; 
+  Type *opType; 
+  Value *lhs, *rhs; 
 };
 
   /***************************************************************************
@@ -94,39 +90,46 @@ private:
 class TerminatorInst : public Instruction
 {
 public:
-  //  enum TerminatorOps
   /// Ops available for a TerminatorInst
   enum TerminatorOp
   {
     RETURN, UNCONDITIONAL_BRANCH, CONDITIONAL_BRANCH
   };
 
-  //  CreateBranch(BasicBlock*, BasicBlock*, Value*, BasicBlock*)
-  /// Create a new Branching Instruction.
-  /// If jumpToOnFalse is NULL or condition is NULL, an unconditional branch is created.
-  /// Otherwise, a conditional branch is created.
-  /// A non-NULL condition's Type must be Integer, else 0 is asserted.
-  /// If condition is NULL or evaluated at run time to be non-zero, BB jumpToOnTrue is branched to.
-  /// Else if condition is evaluated at run time to be zero, BB jumpToOnFalse is branched to.
+  /// Create a new Conditional Branching Instruction.
+  /// The condition's Type must be Integer, else 0 is asserted.
+  /// If condition is evaluated at run time to be non-zero, BB jumpToOnTrue is branched to.
+  /// Else, BB jumpToOnFalse is branched to.
   /// TerminatorOp's Type is set to void.
-  static TerminatorInst* CreateBranch(BasicBlock *jumpToOnTrue,
-                                      BasicBlock *jumpToOnFalse = NULL,
-                                      Value *condition = NULL, 
-                                      BasicBlock *insertAtEnd=NULL);
+  static TerminatorInst* CreateConditionalBranch(BasicBlock *jumpToOnTrue,
+                                                 BasicBlock *jumpToOnFalse,
+                                                 Value *condition, 
+                                                 BasicBlock *insertAtEnd=NULL);
 
-  //  CreateReturn(Value*, BasicBlock*)
-  /// Creates an Instruction to return from a CallInst.
-  /// If returnVal is NULL, TerminatorInst's Type is set to void.
-  static TerminatorInst* CreateReturn(Value* returnVal = NULL, BasicBlock *insertAtEnd=NULL);
+  /// Create a new Unconditional Branching Instruction.
+  /// Flow of control is always handed to BB jumpTo.
+  /// TerminatorOp's Type is set to void.
+  static TerminatorInst* CreateUnconditionalBranch(BasicBlock *jumpTo,
+                                                   BasicBlock *insertAtEnd=NULL);
 
-  TerminatorOp getTerminatorOp(); ///< returns this instruction's op
+  /// Creates an Instruction to return from a function back to the original
+  /// calling point.  If the parent function exists at creation time and
+  /// returnVal's Type is different than the parent function's returnType, 
+  /// 0 is asserted.
+  static TerminatorInst* CreateReturn(Value *returnVal, BasicBlock *insertAtEnd=NULL);
+
+  TerminatorOp getTerminatorOp(); 
+
+  /// If this Instruction is a RETURN, ensures that the parent Function's 
+  /// return Type is the same as the Type of the Value being returned.
+  /// If not, 0 is asserted.
+  virtual void setParent(BasicBlock*);
 
 protected:
-  TerminatorInst(TerminatorOp op, BasicBlock *jumpToOnTrue, BasicBlock *jumpToOnFalse,
-                 Value *condition, Value *returnVal, BasicBlock *insertAtEnd);
+  TerminatorInst(TerminatorOp op, BasicBlock *insertAtEnd);
 
 private:
-  TerminatorOp op; ///< @see getTerminatorOp()
+  TerminatorOp op; 
   BasicBlock *jumpToOnTrue, *jumpToOnFalse;
   Value *condition;
   Value *returnVal;
@@ -139,6 +142,21 @@ private:
 class CallInst : public Instruction
 {
 public:
+  /// Create a CallInst
+  static CallInst* Create(Function *toCall, 
+                          std::list<Value*> args,
+                          BasicBlock *insertAtEnd=NULL);
+ 
+  /// Sets the argument at position 0 in the CallInst to be Value.
+  /// Asserts 0 if the index is out of bounds.
+  /// Asserts 0 if the Value has an incorrect Type for the Function
+  /// at position index.
+  void setArg(int, Value*);
+  Value* getArg(int);
+
+protected:
+  CallInst(Function *toCall, BasicBlock *insertAtEnd);
+
 private:
 };
 
@@ -152,64 +170,54 @@ private:
 class PhiNode : public Instruction
 {
 public:
-  //  Create(Iterator<Value*>, Iterator<BasicBlock*>, BasicBlock*)
   /// Creates a PhiNode that determines value based on flow.
   /// All Values in values must have the same Type, else 0 is asserted.
   /// The PhiNode's Value is equivalent to the Type of any of the values.
-  static PhiNode* Create(josh::Iterator<Value*> &values, 
-                         josh::Iterator<BasicBlock*> &paths, 
+  static PhiNode* Create(std::list<Value*>::iterator &values, 
+                         std::list<BasicBlock*>::iterator &paths, 
                          BasicBlock *insertAtEnd=NULL);
 
-  //  CreateEmpty(Type*, BasicBlock*)
   /// Creates an empty PhiNode to be filled in later.  
-  /// This Instruction is not considered valid until all appropriate paths to
-  /// the PhiNode's containing basic block are filled in with a (path, value) pair.
+  /// The Instruction returned is not considered valid until all appropriate 
+  /// paths to the PhiNode's parent basic block are filled in with a 
+  /// (path, value) pair.
   static PhiNode* CreateEmpty(Type *type, BasicBlock *insertAtEnd=NULL);
 
-  //  getNumPairs()
   /// returns the number of (Value*, BasicBlock*) pairs that 
   /// exist for this PhiNode
   int getNumPairs();
 
-  //  getNthValue(int)
   /// Returns the Value located at position int in the list of incoming pairs.
   /// Asserts 0 if int is out of range.
   Value* getNthValue(int);
 
-  //  setNthValue(int, Value*)
   /// Sets the Value located at position int in the list of incoming pairs.
   /// Asserts 0 if Value is not the same Type as the PhiNode.
   /// Asserts 0 if int is out of range.
   void setNthValue(int, Value*);
 
-  //  getNthBlock(int)
-  /// Returns the BasicBlock located at position int in the list of incoming pairs.
-  /// Asserts 0 if int is out of range.
+  /// Returns the BasicBlock located at position int in the list of incoming
+  /// pairs. Asserts 0 if int is out of range.
   BasicBlock* getNthBlock(int);
   
-  //  setNthBlock(int, BasicBlock*)
-  /// Sets the BasicBlock located at position int in the list of incoming pairs.
-  /// Asserts 0 if int is out of range.
+  /// Sets the BasicBlock located at position int in the list of incoming 
+  /// pairs. Asserts 0 if int is out of range.
   void setNthBlock(int, BasicBlock*);
 
-  //  addPair(Value*, BasicBlock*)
-  /// adds the pair of (Value*, BasicBlock*) to the list of incoming pairs.
-  /// Asserts 0 if Value* is not the same Type as the PhiNode
+  /// Adds the pair of (Value*, BasicBlock*) to the list of incoming pairs.
+  /// Asserts 0 if Value is not the same Type as the PhiNode.
   void addPair(Value*, BasicBlock*);
 
-  //  removeNthPair(int)
   /// detaches the pair at location int from the list of incoming pairs.
   void removeNthPair(int);
   
 protected:
-  //  Constructor
   PhiNode(Type *type, BasicBlock *insertAtEnd);
 
 private:
-  //  pairs
   /// all pairs of Values and BasicBlocks representing each Value
   /// this PhiNode could take on depending on the flow of control
-  josh::List< std::pair<Value*, BasicBlock*> > pairs;
+  std::list< std::pair<Value*, BasicBlock*> > pairs;
 };
 
   /***************************************************************************
@@ -220,26 +228,26 @@ private:
 class StoreInst : public Instruction
 {
 public:
-  //  Create(Value *toStore, Value *address, BasicBlock*)
   /// Returns a new StoreInst that stores Value toStore at location address.
   /// Asserts 0 if address's Type is not a pointer.
-  /// Asserts 0 if the Type address's Type points to is not equal to Value's Type.
+  /// Asserts 0 if the address's pointed to Type to is not equal to Value's Type.
   static StoreInst* Create(Value *toStore, Value *address, BasicBlock *insertAtEnd=NULL);
 
-  Value* getStoredValue(); ///< returns the Value which this is storing
+  /// Asserts 0 if the Value's Type is different than the address' pointed to Type.
   void setStoredValue(Value*);
-  Value* getAddress();     ///< returns the address to which this is storing to
+  Value* getStoredValue(); ///< returns the Value which this is storing
+
+  /// Asserts 0 if address's Type is not a pointer.
+  /// Asserts 0 if the address' pointed to Type is different than toStore's Type.
   void setAddress(Value*);
+  Value* getAddress();     ///< returns the address to which this is storing to
 
 protected:
-  //  Constructor
-  StoreInst(PointerType *addressType, BasicBlock *insertAtEnd);
+  StoreInst(BasicBlock *insertAtEnd);
 
 private:
   Value *toStore;
   Value *address;
-  PointerType  *addressType;
-
 };
 
   /***************************************************************************
@@ -249,16 +257,18 @@ private:
 class LoadInst : public Instruction
 {
 public:
-  //  Create(Value*, BasicBlock*)
   /// Returns a new LoadInst that loads a Value from address.
   /// Asserts 0 if address's Type is not a pointer.
   /// Takes on the Type that address points to.
   static LoadInst* Create(Value *address, BasicBlock *insertAtEnd=NULL);
 
-  Value *getAddress();     ///< returns the address to which this is loading from
-  void setAddress(Value*); ///< sets the Value to which this instruction stores to
-                           ///< asserts 0 if the Value's Type is not a pointer
-                           ///< asserts 0 if the address' pointed to Type is different from the instruction's Type
+  Value* getAddress();     ///< returns the address to which this is loading from
+
+  /// Sets the Value to which this instruction stores to.
+  /// asserts 0 if the Value's Type is not a pointer.
+  /// asserts 0 if the address' pointed to Type is different 
+  /// from the instruction's Type.
+  void setAddress(Value*); 
 
 protected:
   //  Constructor
@@ -275,20 +285,22 @@ private:
 class AllocaInst : public Instruction
 {
 public:
-  //  CreateArray(Type*, Value*, BasicBlock*)
   /// Creates an Instruction to allocate a piece of memory.
   /// arraySize must be of type Integer.
-  /// The Value of AllocaInst is a pointer which points to the allocated space.
-  static AllocaInst* CreateArray(Type *type, Value *arraySize, BasicBlock *insertAtEnd=NULL);
+  /// If arraySize is a Constant and evaluates to a negative number, 
+  /// 0 is asserted.  The Value of AllocaInst is of Type Pointer and 
+  /// points to the allocated space.
+  static AllocaInst* CreateArray(Type *type, 
+                                 Value *arraySize, 
+                                 BasicBlock *insertAtEnd=NULL);
 
-  //  Create(Type*, BasicBlock*)
   /// Creates an Instruction to allocate a piece of memory.
   /// The Value of AllocaInst is a pointer which points to the allocated space.
   static AllocaInst* Create(Type *type, BasicBlock *insertAtEnd=NULL);
 
-  //  getArraySize()
   /// Returns a Value of Type Integer detailing the amount of space allocated.
-  /// If a non-array pointer was created, the array size will be a Constant of value 1
+  /// If a non-array pointer was created, the array size will be a Constant of
+  /// value 1.
   Value *getArraySize(); 
                         
 protected:
@@ -296,6 +308,55 @@ protected:
 
 private:
   Value *arraySize; ///< @see getArraySize()
+};
+
+  /***************************************************************************
+   *                          Cast Insts                                     *
+   ***************************************************************************/
+/// Does a cast on a Value from one Type to another.
+/// Cast is an abstract class; need to create one of its subclasses.
+class Cast : public Instruction
+{
+public:
+  /// Determine what course of action to take if the Value has a smaller
+  /// bit width than the Type it is being cast to.
+  enum BitExtension
+  {
+    ZERO,            /*!< zero extend the Value */
+    SIGN,            /*!< sign extend the Value */
+    EXTENSION_ERROR  /*!< assert 0 */
+  };
+  
+  /// Determine what course of action to take if the Value has a larger
+  /// bit width than the Type it is being cast to.
+  enum BitCut
+  {
+    CUT,      /*!< cuts away the upper bits of Value */
+    CUT_ERROR /*!< assert 0 */
+  };
+  
+protected:
+  Cast(Value *toCast, Type *newType, BasicBlock *insertAtEnd);
+  BitExtension extendMethod;
+  BitCut cutMethod;
+};
+
+  /***************************************************************************
+   *                          BitCast                                        *
+   ***************************************************************************/
+/// A BitCast does exactly that; it intreprets the bits of Value exactly
+/// as if they were of Type newType.  If Type has a larger or smaller
+/// bit width than toCast, appropriate cutting/extension action is taken.
+class BitCast : public Cast
+{
+public:
+  static Cast* Create(Value *toCast, 
+                      Type *newType, 
+                      BitExtension extendMethod = EXTENSION_ERROR,
+                      BitCut cutMethod = CUT_ERROR,
+                      BasicBlock *insertAtEnd=NULL);
+protected:
+  BitCast(Value *toCast, Type *newType, BasicBlock *insertAtEnd);
 };
 
 #endif

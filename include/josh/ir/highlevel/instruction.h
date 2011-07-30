@@ -1,38 +1,30 @@
 #ifndef __INSTRUCTION_H__
 #define __INSTRUCTION_H__
 
-#include "josh/ir/highlevel/value.h"
+#include "josh/ir/highlevel/user.h"
 
 class BasicBlock;
 
 /// class Instruction
-/// represents all Values which must be computed at run time
+/// Represents all Users whose value must be computed at run time
 /**
- * Instruction is a subclass of Value that represents a Value whos value
+ * Instruction is an abstract base class.
+ * Instruction is a subclass of User that represents a Value whos value
  * and/or size are not known at compile time, and thus must be computed
  * at run time.
  */
-class Instruction : public Value
+class Instruction : public User
 {
 public:
-  enum InstCategory
-  {
-    BINARY, TERMINATOR, CALL, PHINODE, STORE, LOAD, ALLOCA
-  };
-
-  InstCategory getInstCategory();
-
-  BasicBlock *getParent();
-  void setParent(BasicBlock*);
+  /// This function to set the Inst's parent does NOT insert it into the BB
+  /// or remove any old parent dependencies.
+  virtual void setParent(BasicBlock*);
+  BasicBlock* getParent();
 
 protected:
-  // Constructor
-  /// requires the instruction's type and its category
-  /// if insertAtEnd is NULL, does not put into a BB
-  Instruction(Type*, InstCategory, BasicBlock *insertAtEnd);
+  Instruction(Type*, BasicBlock *insertAtEnd);
 
 private:
-  InstCategory instCat;
   BasicBlock *parent;
 };
 

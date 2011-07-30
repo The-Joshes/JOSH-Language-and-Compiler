@@ -1,9 +1,9 @@
 #ifndef __INSTRUCTIONS_H__
 #define __INSTRUCTIONS_H__
 
-#include "josh/ir/highlevel/instruction.h"
-
 #include <cstring> // for NULL
+
+#include "josh/ir/highlevel/instruction.h"
 
 class BasicBlock;
 class Function;
@@ -16,10 +16,6 @@ class PointerType;
 class BinaryInst : public Instruction 
 {
 public: 
-  /***************************************************************************
-   *                           Static members                                *
-   ***************************************************************************/
-  
   /// List of binary operators:\n
   /// Arithmetic: ADD, SUBTRACT, MULTIPLY, DIVIDE.\n
   /// Compare: LESS_THAN, GREATER_THAN, LESS_OR_EQUAL, GREATER_OR_EQUAL, EQUAL, NOT_EQUAL.\n
@@ -39,11 +35,6 @@ public:
     NOT_EQUAL           /*!< A = (X != Y) */  
   };
 
-  static bool isOpArithmetic(BinaryOp op); ///< returns true if op is arithmetic;
-                                           ///< returns false otherwise
-  static bool isOpCompare(BinaryOp op);    ///< returns true if op is compare;
-                                           ///< returns false otherwise
-
   /// Create a new BinaryInst of the form (val) = (lhs) op (rhs).
   /// If lhs and rhs do not have the same BaseType, 0 is asserted.
   /// If the op is arithmetic, the new BinaryInst has the same BaseType as lhs and rhs.
@@ -51,10 +42,6 @@ public:
   /// If the op is not defined for the operator Types, 0 is asserted.
   static BinaryInst* Create(BinaryOp op, Value *lhs, Value *rhs, BasicBlock *insertAtEnd=NULL);
 
-  /***************************************************************************
-   *                           Member functions                              *
-   ***************************************************************************/
-  
   /// returns true if this Instruction's value can be computed at compile time,
   /// returns false otherwise.
   bool canBeComputedAtCompileTime();
@@ -352,11 +339,11 @@ protected:
 class BitCast : public CastInst
 {
 public:
-  static Cast* Create(Value *toCast, 
-                      Type *newType, 
-                      BitExtension extendMethod = EXTENSION_ERROR,
-                      BitCut cutMethod = CUT_ERROR,
-                      BasicBlock *insertAtEnd=NULL);
+  static BitCast* Create(Value *toCast, 
+                         Type *newType, 
+                         BitExtension extendMethod = EXTENSION_ERROR,
+                         BitCut cutMethod = CUT_ERROR,
+                         BasicBlock *insertAtEnd=NULL);
 protected:
   BitCast(Value *toCast, Type *newType, BasicBlock *insertAtEnd);
 };

@@ -22,11 +22,12 @@ public:
   bool isNameUnique(const std::string &name) const;
   Value* removeValueWithName(const std::string &name);
 
-  Function* getFunction(std::string &name);
   void addFunction(Function*);
+  Function* getFunction(std::string &name);
 
-  Constant* getGlobal(std::string &name);
+  /// Global Constants must be of Type PointerType, else 0 is asserted.
   void addGlobal(Constant*);
+  Constant* getGlobal(std::string &name);
 
 private:
   HL_Module(Profile*);

@@ -52,7 +52,7 @@ protected:
   void addUser(Value*);    ///< adds Value to the user list
   bool removeUser(Value*); ///< if Value is in users list, removes and returns true
   
-  Value(Type*, std::string &name = "");
+  Value(Type*, const std::string &name = "");
   
 private:
   Type *type;             ///< this Value's type

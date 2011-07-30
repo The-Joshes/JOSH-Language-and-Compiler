@@ -1,6 +1,8 @@
 #ifndef __TYPE_H__
 #define __TYPE_H__
 
+class BinaryOp;
+
 ///  class Type
 /// Describes a Value's Type.
 /**
@@ -28,24 +30,22 @@ public:
     LABEL     /*!< a Type that can be branched to; see BasicBlock           */
   };
 
-  /***************************************************************************
-   *                           Static factory functions                      *
-   ***************************************************************************/
   static Type* getVoidType();
   static Type* getIntType(int bitWidth);
   static Type* getLabelType();
 
-  /***************************************************************************
-   *                           Member methods                                *
-   ***************************************************************************/
   /// Returns an enum detailing the exact type this Type describes.
   /// For example, to check if a type is an integer, do
   /// (type->getBaseType() == Type::INTEGER)
   BaseType getBaseType() const;
   
   int getBitWidth() const; ///< the size of this Type in bits
+  
+  /// Is it valid to perform op on this type of Type?
+  virtual bool isValidFor(BinaryOp op);
 
 protected:
+  Type(BaseType baseType);
 
 private:
   BaseType baseType; ///< the exact type this Type describes

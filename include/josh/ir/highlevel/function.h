@@ -16,8 +16,8 @@ class FunctionType;
  * A function may have only one entry point, but multiple exit points.
  * A function's return Type and argument Types are initialized at creation
  * and cannot be changed afterwards.
- * A function is not considered valid for compilation until an entryPoint is specified.
- * @see entryPoint
+ * A function is not considered valid for compilation until an entryPoint 
+ * is specified; see entryPoint.
  */
 class Function : public Value
 {

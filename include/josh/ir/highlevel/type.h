@@ -25,7 +25,7 @@ public:
     POINTER,  /*!< a Type that points to an address in memory               */
     COMPLEX,  /*!< a Type composed of multiple other Types, like a a struct */
     FUNCTION, /*!< a Type containing a returnType and argumentTypes         */
-    LABEL     /*!< a Type that can be branched to; @see BasicBlock          */
+    LABEL     /*!< a Type that can be branched to; see BasicBlock           */
   };
 
   /***************************************************************************

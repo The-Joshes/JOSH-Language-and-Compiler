@@ -24,7 +24,7 @@ public:
   /// Arithmetic: ADD, SUBTRACT, MULTIPLY, DIVIDE.\n
   /// Compare: LESS_THAN, GREATER_THAN, LESS_OR_EQUAL, GREATER_OR_EQUAL, EQUAL, NOT_EQUAL.
   /// Compare Insts always have a Type of Integer, regardless of the Type of its operators.
-  /// To see a BinaryInst's operator Type, @see getOpType()
+  /// To see a BinaryInst's operator Type, see getOpType()
   enum BinaryOp
   {
     ADD,                /*!< A = (X + Y)  */  

@@ -14,7 +14,7 @@ class User;
  * Value is an abstract base class.
  * All Values have a corresponding Type.  This Type cannot be changed
  * after creation.
- * All Values have a name; by default, it is the empty string.  @see
+ * All Values have a name; by default, it is the empty string.  See
  * HL_Module for information on generating unique names.
  * All Values also keep track of their users; that is, all other Values
  * who depend (use) on this Value.  The list of users is not manually 

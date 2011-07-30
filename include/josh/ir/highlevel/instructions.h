@@ -20,9 +20,9 @@ public:
    *                           Static members                                *
    ***************************************************************************/
   
-  /// List of binary operators.\n
+  /// List of binary operators:\n
   /// Arithmetic: ADD, SUBTRACT, MULTIPLY, DIVIDE.\n
-  /// Compare: LESS_THAN, GREATER_THAN, LESS_OR_EQUAL, GREATER_OR_EQUAL, EQUAL, NOT_EQUAL.
+  /// Compare: LESS_THAN, GREATER_THAN, LESS_OR_EQUAL, GREATER_OR_EQUAL, EQUAL, NOT_EQUAL.\n
   /// Compare Insts always have a Type of Integer, regardless of the Type of its operators.
   /// To see a BinaryInst's operator Type, see getOpType()
   enum BinaryOp
@@ -97,19 +97,21 @@ public:
   };
 
   /// Create a new Conditional Branching Instruction.
-  /// The condition's Type must be Integer, else 0 is asserted.
-  /// If condition is evaluated at run time to be non-zero, BB jumpToOnTrue is branched to.
-  /// Else, BB jumpToOnFalse is branched to.
+  /// The condition's Type must be INTEGER, else 0 is asserted.
+  /// The Type of jumpToOnTrue and jumpToOnFalse must be LABEL, else 0 is asserted.
+  /// If condition is evaluated at run time to be non-zero, jumpToOnTrue is branched to.
+  /// Else, jumpToOnFalse is branched to.
   /// TerminatorOp's Type is set to void.
-  static TerminatorInst* CreateConditionalBranch(BasicBlock *jumpToOnTrue,
-                                                 BasicBlock *jumpToOnFalse,
+  static TerminatorInst* CreateConditionalBranch(Value *jumpToOnTrue,
+                                                 Value *jumpToOnFalse,
                                                  Value *condition, 
                                                  BasicBlock *insertAtEnd=NULL);
 
   /// Create a new Unconditional Branching Instruction.
-  /// Flow of control is always handed to BB jumpTo.
+  /// The Type of jumpTo must be LABEL, else 0 is asserted.
+  /// Flow of control always branches to jumpTo.
   /// TerminatorOp's Type is set to void.
-  static TerminatorInst* CreateUnconditionalBranch(BasicBlock *jumpTo,
+  static TerminatorInst* CreateUnconditionalBranch(Value *jumpTo,
                                                    BasicBlock *insertAtEnd=NULL);
 
   /// Creates an Instruction to return from a function back to the original
@@ -130,7 +132,7 @@ protected:
 
 private:
   TerminatorOp op; 
-  BasicBlock *jumpToOnTrue, *jumpToOnFalse;
+  Value *jumpToOnTrue, *jumpToOnFalse;
   Value *condition;
   Value *returnVal;
 };
@@ -311,11 +313,11 @@ private:
 };
 
   /***************************************************************************
-   *                          Cast Insts                                     *
+   *                          CastInst                                       *
    ***************************************************************************/
 /// Does a cast on a Value from one Type to another.
-/// Cast is an abstract class; need to create one of its subclasses.
-class Cast : public Instruction
+/// CastInst is an abstract base class.
+class CastInst : public Instruction
 {
 public:
   /// Determine what course of action to take if the Value has a smaller
@@ -336,7 +338,7 @@ public:
   };
   
 protected:
-  Cast(Value *toCast, Type *newType, BasicBlock *insertAtEnd);
+  CastInst(Value *toCast, Type *newType, BasicBlock *insertAtEnd);
   BitExtension extendMethod;
   BitCut cutMethod;
 };
@@ -347,7 +349,7 @@ protected:
 /// A BitCast does exactly that; it intreprets the bits of Value exactly
 /// as if they were of Type newType.  If Type has a larger or smaller
 /// bit width than toCast, appropriate cutting/extension action is taken.
-class BitCast : public Cast
+class BitCast : public CastInst
 {
 public:
   static Cast* Create(Value *toCast, 

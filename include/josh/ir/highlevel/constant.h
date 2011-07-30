@@ -1,26 +1,29 @@
 #ifndef __CONSTANT_H__
 #define __CONSTANT_H__
 
-#include "josh/ir/value.h"
+#include "josh/ir/highlevel/user.h"
 
 class Type;
 class BinaryInst;
 
 /// class Constant
-/// represents all Values whos value and size are known at compile time
-/**
- * Constant is a subclass of Value that represents a Value whos size and value
- * are known at compile time.
+/// Represents all Users whose value and size are known at compile time.
+/** 
+ * Constant is a User because certain kinds (like arrays) may use other
+ * Constants, thus qualifying them as Users.
  */
-class Constant : public Value
+template <typename T>
+class Constant : public User
 {
 public:
-  //  CreateEquivalentConstant(BinaryInst*)
-  /// If BinaryInst->canBeComputedAtCompileTime(),
-  /// this method returns a Constant that is equivalent to BinaryInst;
-  /// if !BinaryInst->canBeComputedAtCompileTime(), 0 is asserted.
-  static Constant* CreateEquivalentConstant(BinaryInst*);
-protected:
+  /// Creates and returns a Constant with a Value that evaulates to value
+  /// and a Type of type.
+  static Constant<T>* Create(T value, Type *type);
+
+  const T getValue();
+
+private:
+  T value;
 };
 
 #endif

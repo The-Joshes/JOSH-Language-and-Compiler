@@ -19,7 +19,7 @@ public:
   const Profile* getProfile() const; 
 
   std::string getUniqueName();
-  bool isNameUsed(const std::string &name) const;
+  bool isNameUnique(const std::string &name) const;
   Value* removeValueWithName(const std::string &name);
 
   Function* getFunction(std::string &name);

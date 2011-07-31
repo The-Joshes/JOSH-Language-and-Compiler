@@ -15,7 +15,7 @@ class User;
  * All Values have a corresponding Type.  This Type cannot be changed
  * after creation.
  * All Values have a name; by default, it is the empty string.  See
- * HL_Module for information on generating unique names.
+ * Module for information on generating unique names.
  * All Values also keep track of their users; that is, all other Values
  * who depend (use) on this Value.  The list of users is not manually 
  * updated, but is automatically changed as new Values are created, 
@@ -41,7 +41,7 @@ public:
  
   /// Sets the name of this Value to be name.
   /// For generating unique names to be used on a global level, it is 
-  /// recommended to use HL_Module's getUniqueName() or
+  /// recommended to use Module's getUniqueName() or
   /// isNameUnique() functionality.
   void setName(std::string name);
   const std::string& getName();

@@ -1,40 +1,24 @@
-To incorporate the best parts of a variety of languages, and incorporate them into one.
+JOSH is a by-product of several different factors.  Two friends who studided compilers in college, enjoyed the work, and never found an opportunity to apply it outside of school.  Two kids named Josh who happened to be bored.  Two programmers who were fed up with modern programming languages and the compromises they made to solve problems inherent to any language.  So, these Joshes set out on a mission: to settle their intellectual curiousity and cure their boredom, they decided to create a new language and compiler.
 
-Below is a list of languages that inspired the development of Josh. Each language is accompanied with a list of aspects that we wanted to imitate and a list of problems that we wished to avoid. Such lists include both general ideas of the language, and some specific features that either should or should not be included. 
+JOSH the language draws deeply from C++ and Java.  Both C++ and Java are fine languages that have proven their worth in educational, private, and public workplace settings.  However, their widespread use does not imply that they are perfect.  JOSH seeks to draw elements from both, taking the good, and leaving the bad.  Below are a few issues we have with C++ and Java, as well as how we plan to solve them.
 
+C++ Problems and Solutions
+Problem:  Seperation of interface from implementation (.cpp vs .h) makes it nearly impossible to automatically create and track dependencies
+Solution: Remove the need for header files by requiring declaration and definition to be in the same file
 
-C++: 
- This language was the most important contributor to the structure and grammar of Josh. Many C/C++ programs will work with no modifications, and most others will need only superficial changes. 
- What to include: 
- - Love of structure: A C++ program is practically forced into a very easy-to-follow structure, without being too overbearing.
- - Simplicity: It is fairly easy to write a simple C++ program, say, to calculate your interest or to print a friendly greeting. 
- - Efficiency: C++ is very efficient. Nuff said.
+Problem:  Implementation of generics breaks traditional code design
+Solution: Incoporate generics more naturally into the language, making them simpler to implement and compile
 
- What not to include: 
- - Class format: A few specific quips follow.
-   * The Typename Classname::Methodname(... format is too cumbersome. A simpler format would make programming classes easier. 
-   * Declaration of private variables and methods in the interface part of the class is necessary 
-   * The physical separation of class interface from class implementation often creates the (deplorable) necessity of using copy-paste in order to make the implementation match the interface, and causes problems when the interface is changed. 
- - 
+Problem:  Standard libraries are rather bare bone and don't encompass much more than the basics
+Solution: Provide a rich, full-featured library with room for expansion
 
+Java Problems and Solutions
+Problem:  No explicit memory management degrades performance
+Solution: Allow users to dynimcally control memory allocation and deallocation
 
-Python:
- What to include: 
- - Simplicity: It is extremely easy to write a simple Python program. 
- - Multiple assignment: An easy way to combine assignments that are logically related. As with any programming construct, it could hinder understanding, but in some situations, multiple assignment could make a programmer's logic more transparent. 
- - 
+Problem:  Everything-is-an-object requires simple programs to be overly complex and degrades performance when plain data needs to be represented in a concise way
+Solution: Allow for user-defined "primitive" types, such as structs; at the same time, don't force OO on programmers
 
- What not to include: 
- - Dependence on white space: A forgotten tab could easily cause your program to behave differently than it should, without any indication of an error until your client realizes that her cocktail dress is transparent instead of bright orange because an increment statement was outside of a for loop instead of in it.
- - Lack of type-checking: A lot of errors could be checked easily
- - Lack of compiling: Given that we're making compiler, this one's pretty much a given. 
+Problem:  Inconsistancies in pass by value and pass by reference; in code, objects and primitives look they are treated the same, but are handled completely differently
+Solution: Allow programmers to clearly specify pass by value and pass by reference on both objects and primitives
 
-
-Java: 
- What to include: 
- - Portable. 
- - 
-
- What not to include: 
- - Overbearing structure: Simple programs are far too complicated to write. 
- - Inconsistent passing: Basic types are passed by value; Compound types by reference. Relatedly, there is no way to pass basic types by value. 

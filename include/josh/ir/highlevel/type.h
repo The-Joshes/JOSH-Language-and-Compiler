@@ -23,7 +23,8 @@ public:
   /// is needed to determine a Type's actual type.
   enum BaseType
   {
-    VOID, INTEGER, DECIMAL, 
+    VOID, INTEGER, 
+    FLOAT,    /*!< a Type representing an IEE floating point                */
     POINTER,  /*!< a Type that points to an address in memory               */
     COMPLEX,  /*!< a Type composed of multiple other Types, like a a struct */
     FUNCTION, /*!< a Type containing a returnType and argumentTypes         */
@@ -31,7 +32,6 @@ public:
   };
 
   static Type* getVoidType();
-  static Type* getIntType(int bitWidth);
   static Type* getLabelType();
 
   /// Returns an enum detailing the exact type this Type describes.
@@ -43,6 +43,9 @@ public:
   
   /// Is it valid to perform op on this type of Type?
   virtual bool isValidFor(BinaryOp op);
+  
+  /// Returns true if this can be cast to Type; false otherwise.
+  virtual bool canBeCastTo(Type*);
 
 protected:
   Type(BaseType baseType);

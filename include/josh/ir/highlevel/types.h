@@ -5,18 +5,38 @@
 
 #include "josh/ir/highlevel/type.h"
 
-class HL_Module;
+class Profile;
 
-/// class DecimalType
-/// Represents a numeric Type with a non-integer part.
-class DecimalType : public Type
+/// class NumericType
+/// Represents INTEGER and FLOAT Types.
+class NumericType : public Type
 {
 public:
+  /// Represents a float as specified by IEEE 754-2008; see 
+  /// http://en.wikipedia.org/wiki/Floating_point#IEEE_754:_floating_point_in_modern_computers
+  enum IEEFloat
+  {
+    HALF = 16,      /*!< A 16 bit IEEE Float  */
+    SINGLE = 32,    /*!< A 32 bit IEEE Float  */
+    DOUBLE = 64,    /*!< A 64 bit IEEE Float  */
+    QUAD = 128      /*!< A 128 bit IEEE Float */
+  };
 
-protected:
-
-private:
+  /// Represents the different sizes available for integeral types.
+  /// See Profile for what size is used.
+  enum Integeral
+  {
+    BIT = 1,
+    CHAR,
+    SHORT,
+    INT,
+    LONG
+  };
+  
+  static Type* getIEEFloat(IEEFloat floatType);
+  static Type* getIntegerType(Integeral integerType, Profile *profile);
 };
+
 
 /// class PointerType
 /// Represents a pointer to a location in memory.

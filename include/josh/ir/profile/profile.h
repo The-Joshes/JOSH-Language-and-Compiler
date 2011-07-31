@@ -10,14 +10,17 @@
 class Profile
 {
 public:
-  /// Returns the size of a pointer in bits on the given system.
-  int getPointerSize() const;
+  
+  int getPointerSize() const; ///< Size of a pointer in bits on the given machine
+  int getCharSize() const;    ///< Size of a char in bits on the given machine
+  int getShortSize() const;   ///< Size of a short in bits on the given machine
+  int getIntSize() const;     ///< Size of an integer in bits on the given machine
+  int getLongSize() const;    ///< Size of a long in bits on the given machine
 
 protected:
   Profile();
 
 private:
 };
-
 
 #endif

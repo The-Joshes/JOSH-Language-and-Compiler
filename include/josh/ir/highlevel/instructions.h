@@ -7,6 +7,7 @@
 
 class BasicBlock;
 class Function;
+class NumericType;
 class PointerType;
 
   /***************************************************************************
@@ -328,6 +329,9 @@ protected:
   CastInst(Value *toCast, Type *newType, BasicBlock *insertAtEnd);
   BitExtension extendMethod;
   BitCut cutMethod;
+
+private:
+  Value *toCast;
 };
 
   /***************************************************************************
@@ -339,6 +343,8 @@ protected:
 class BitCast : public CastInst
 {
 public:
+  /// Asserts 0 if it is invalid to cast toCast to newType
+  /// @see Type::canBeCastTo(Type*)
   static BitCast* Create(Value *toCast, 
                          Type *newType, 
                          BitExtension extendMethod = EXTENSION_ERROR,
@@ -346,6 +352,30 @@ public:
                          BasicBlock *insertAtEnd=NULL);
 protected:
   BitCast(Value *toCast, Type *newType, BasicBlock *insertAtEnd);
+};
+
+  /***************************************************************************
+   *                          NumericCast                                    *
+   ***************************************************************************/
+/// Useful for casting between different numeric types.
+class NumericCast : public CastInst
+{
+public:
+  /// Casts an INTEGER Type to a FLOAT Type.
+  /// If toCast is not of Type INTEGER, 0 is asserted.
+  /// If newType is not of Type FLOAT, 0 is asserted.
+  static NumericCast* CreateIntToFloat(Value *toCast,
+                                       NumericType *newType,
+                                       BasicBlock *insertAtEnd=NULL);
+
+  /// Casts a FLOAT Type to an INTEGER Type.
+  /// If toCast is not of Type FLOAT, 0 is asserted.
+  /// If newType is not of Type INTEGER, 0 is asserted.
+  static NumericCast* CreateFloatToInt(Value *toCast,
+                                       NumericType *newType,
+                                       BasicBlock *insertAtEnd=NULL);
+protected:
+  NumericCast(Value *toCast, Type *newType, BasicBlock *insertAtEnd);
 };
 
 #endif

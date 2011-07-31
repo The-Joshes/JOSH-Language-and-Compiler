@@ -26,6 +26,8 @@ protected:
   void addUse(Value*);     ///< adds Value to the uses list
   bool removeUse(Value*);  ///< if Value is in uses list, removes and returns true
  
+  User(Type*, const std::string &name = "");
+
 private:
   std::list<Value*> uses;  ///< all Values this User depends on
 };

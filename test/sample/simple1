@@ -1,6 +1,0 @@
-#!/bin/bash
-
-#do code
-
-exit 0  #if no error
-#exit 1 #if error

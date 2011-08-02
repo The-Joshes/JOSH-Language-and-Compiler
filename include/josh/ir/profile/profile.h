@@ -21,6 +21,7 @@ protected:
   Profile();
 
 private:
+  int pointerSize, charSize, shortSize, intSize, longSize;
 };
 
 #endif

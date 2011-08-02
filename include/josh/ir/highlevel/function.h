@@ -24,7 +24,7 @@ class Function : public Value
 public:
   static Function* Create(Module *parent,
                           FunctionType *type,
-                          BasicBlock *entryPoint=NULL);
+                          const std::string &name = "");
   
   BasicBlock* getEntryPoint();          ///< @see entryPoint
   void setEntryPoint(BasicBlock*);      ///< @see entryPoint
@@ -38,6 +38,12 @@ public:
   /// normal flow of control.  
   std::list<BasicBlock*> getBlocks(); 
 
+  /// If the parent Module already has a main Function, the other
+  /// main function is notified of its demotion and this Function
+  /// becomes the Module's main Function.
+  void setMainFunction(bool isMain);
+  bool isMainFunction();
+
 private:
   Function(Module*, FunctionType*, BasicBlock*);
 
@@ -46,6 +52,8 @@ private:
 
   /// The point of entrance for when a function is called.
   BasicBlock *entryPoint;
+
+  bool isMain;
 };
 
 #endif

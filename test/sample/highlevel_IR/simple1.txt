@@ -1,0 +1,23 @@
+// 1) Create Module and Profile
+Module *m = new Module(new Linux_x86_64());
+
+// 2) Create all global values
+Type *intType = NumericType::getInt(INT, m);
+GlobalValue *xAddr = GlobalValue::CreateVariable(1, intType, m);
+
+// 3) Create all functions
+Type *mainType = FunctionType::Create(intType);
+Function *f = Function::Create(m, mainType);
+m->setMainFunction(f);
+
+// 4) Start creating function; add instructions to bb until we reach a TerminatorInst
+BasicBlock *bb = BasicBlock::Create(f);
+f->setEntryPoint(bb);
+
+Instruction *yAddr = AllocaInst::Create(intType, bb);
+GlobalValue *four = GlobalValue::CreateConstant(4, intType);  
+StoreInst::Create(four, yAddr, bb);                        // y = 4
+Instruction *x = LoadInst::Create(xAddr, bb);              // x = *xAddr
+Instruction *newX = BinaryInst::Create(ADD, y, x, bb);     // x = y + x
+Instruction *storeX = StoreInst::Create(newX, xAddr, bb);  // *xAddr = x
+TerminatorInst::CreateReturn(returnVal, bb);               // return x

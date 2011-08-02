@@ -1,6 +1,8 @@
 #ifndef __USER_H__
 #define __USER_H__
 
+#include <string>
+
 #include "josh/ir/highlevel/value.h"
 
 /// class User

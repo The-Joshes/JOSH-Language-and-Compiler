@@ -2,6 +2,7 @@
 #define __BASICBLOCK_H__
 
 #include <list>
+#include <string>
 
 #include "josh/ir/highlevel/value.h"
 
@@ -23,11 +24,11 @@ class TerminatorInst;
 class BasicBlock : public Value
 {
 public:
-  static BasicBlock* Create(Function *parent);
+  static BasicBlock* Create(Function *parent, const std::string &name = "");
   
   std::list<BasicBlock*>::iterator&  getPreds(); ///< @see preds
   std::list<BasicBlock*>::iterator&  getSuccs(); ///< @see succs
-  std::list<Instruction*>::iterator& getInsts(); ///< @see insts
+  std::list<Instruction*>& getInsts();           ///< @see insts
   
   Function* getParent();                         ///< @see parent
 

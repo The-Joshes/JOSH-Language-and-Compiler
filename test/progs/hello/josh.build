@@ -1,3 +1,0 @@
-exe a.out: main.josh
-
-# while building main.josh, the compiler notes dependences on "standard/io" and "function"

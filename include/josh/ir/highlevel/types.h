@@ -5,7 +5,10 @@
 
 #include "josh/ir/highlevel/type.h"
 
-class Profile;
+namespace highlevel
+{
+  class Module;
+}
 
 /// class NumericType
 /// Represents INTEGER and FLOAT Types.
@@ -14,7 +17,7 @@ class NumericType : public Type
 public:
   /// Represents a float as specified by IEEE 754-2008; see 
   /// http://en.wikipedia.org/wiki/Floating_point#IEEE_754:_floating_point_in_modern_computers
-  enum IEEFloat
+  enum Float
   {
     HALF = 16,      /*!< A 16 bit IEEE Float  */
     SINGLE = 32,    /*!< A 32 bit IEEE Float  */
@@ -23,18 +26,21 @@ public:
   };
 
   /// Represents the different sizes available for integeral types.
-  /// See Profile for what size is used.
+  /// See highlevel::Module for what size is used.
   enum Integeral
   {
-    BIT = 1,
-    CHAR,
-    SHORT,
-    INT,
-    LONG
+    BIT = 1, /*!< UINT and SINT treated the same */
+    CHAR,    /*!< defaults to UINT */
+    SHORT,   /*!< defaults to SINT */
+    INT,     /*!< defaults to SINT */
+    LONG     /*!< defaults to SINT */
   };
   
-  static Type* getIEEFloat(IEEFloat floatType);
-  static Type* getIntegerType(Integeral integerType, Profile *profile);
+  static Type* getFloat(Float floatType);
+  static Type* getInt(Integeral integerType, highlevel::Module *module); ///< returns the default of signed or unsigned
+  static Type* getSignedInt(Integeral integerType, highlevel::Module *module);
+  static Type* getUnsignedInt(Integeral integerType, highlevel::Module *module);
+
 };
 
 
@@ -89,6 +95,8 @@ class FunctionType : public Type
 public:
   static FunctionType* Create(const std::list<Type*>::iterator &argTypes,
                               Type *returnType = Type::getVoidType());
+
+  static FunctionType* Create(Type *returnType = Type::getVoidType());
 
   std::list<Type*>::iterator getArgTypes();
   Type* getReturnType();

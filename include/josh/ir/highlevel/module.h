@@ -3,8 +3,8 @@
 
 #include <string>
 
-class Constant;
 class Function;
+class GlobalValue;
 class Profile;
 class Value;
 
@@ -16,7 +16,7 @@ namespace highlevel
   class Module
   {
   public:
-    static Module* Create(Profile *profile);
+    Module(Profile *profile);
 
     const Profile* getProfile() const; 
 
@@ -27,13 +27,20 @@ namespace highlevel
     void addFunction(Function*);
     Function* getFunction(std::string &name);
 
-    /// Global Constants must be of Type PointerType, else 0 is asserted.
-    void addGlobal(Constant*);
-    Constant* getGlobal(std::string &name);
+    /// Sets the entry point to this Module if one exists.
+    /// The Function must be a part of this Module, else 0 is asserted.
+    /// A NULL Function indicates this Module has no main Function.
+    void setMainFunction(Function*);
+    /// Sets the entry point to this Module if one exists.
+    /// The Function must be a part of this Module, else 0 is asserted.
+    /// An empty name string indicates this Module has no main Function.
+    void setMainFunction(const std::string &name);
+    Function* getMainFunction(); 
 
+    void addGlobal(GlobalValue*);
+    GlobalValue* getGlobal(std::string &name);
+  
   private:
-    Module(Profile*);
-
     Profile *profile;
   };
 }

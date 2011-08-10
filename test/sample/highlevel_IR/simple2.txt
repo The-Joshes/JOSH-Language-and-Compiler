@@ -3,7 +3,7 @@ Module *m = new Module(new Linux_x86_64());
 
 // 2) Create all global values
 Type *intType = NumericType::getIntegerType(INT, m);
-GlobalValue *xAddr = GlobalValue::CreateVariable(IntType, m);
+GlobalValue *xAddr = GlobalValue::CreateVariable(intType, m);
 
 // 3) Create all functions
 Type *mainType = FunctionType::Create(intType);
@@ -14,12 +14,12 @@ m->setMainFunction(f);
 BasicBlock *start = BasicBlock::Create(f);
 f->setEntryPoint(start);
 
-Instruction *yAddr = AllocaInst::Create(intType, start);
-GlobalValue *four = GlobalValue::CreateConstant(4, intType);  
-StoreInst::Create(four, yAddr, start); // y = 4
+GlobalValue *y = GlobalValue::CreateConstant(4, intType);  
+GlobalValue *zero = GlobalValue::CreateConstant(0, intType); 
+
+StoreInst::Create(zero, xAddr, start);
 
 BasicBlock *loop = BasicBlock::Create(f);
-Instruction *y = LoadInst::Create(yAddr, loop);
 Instruction *x = LoadInst::Create(xAddr, loop);              // x = *xAddr
 Instruction *newX = BinaryInst::Create(ADD, y, x, loop);     // x = y + x
 StoreInst::Create(newX, xAddr, loop);                        // *xAddr = x
@@ -27,4 +27,5 @@ Instruction *compare = BinaryInst::Create(LESS_OR_EQUAL, newX, y, loop); // (x <
 
 BasicBlock *returnBlock = BasicBlock::Create(f);
 TerminatorInst::CreateConditionalBranch(loop, returnBlock, compare, loop);
+Instruction *returnVal = LoadInst::Create(xAddr, loop);              // x = *xAddr
 TerminatorInst::CreateReturn(returnVal, returnBlock);               // return x

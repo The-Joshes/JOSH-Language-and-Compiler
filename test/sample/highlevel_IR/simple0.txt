@@ -1,0 +1,12 @@
+Module *m = new Module(new Linux_x86_64());   //create the appropriate module and profile
+
+Type *intType = NumericType::getInt(INT, m);   // create an int Type
+Type *funcType = FunctionType::Create(intType); // Create a function Type that takes no args and returns an int
+Function *f = Function::Create(m, funcType);  // create an actual function
+m->setMainFunction(f); // in the module, specify this function as the main function
+
+BasicBlock *bb = BasicBlock::Create(f); // create a basic block
+f->setEntryPoint(bb); // set the basic block as the entry point in the function
+
+GlobalValue *fortytwo = GlobalValue::CreateConstant(42, intType);
+TerminatorInst::CreateReturn(fortytwo, bb); // return 42;

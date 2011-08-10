@@ -1,0 +1,9 @@
+VX: (sint)
+  1,
+
+main:
+  .bb00:
+    val00 = (sint) LOAD $VX
+    val01 = (sint) ADD $val00, $4
+    STORE (sint) $VX, $val01
+    RETURN (sint) $val01

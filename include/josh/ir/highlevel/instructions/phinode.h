@@ -5,6 +5,7 @@
   /***************************************************************************
    *                           PhiNode                                       *
    ***************************************************************************/
+/// class PhiNode
 /// A PhiNode Instruction ('phi function') makes SSA form possible by
 /// allowing a Value to take value based on where flow of control
 /// came from.  For a given PhiNode, every successor basic block to the
@@ -31,27 +32,27 @@ public:
 
   /// Returns the Value located at position int in the list of incoming pairs.
   /// Asserts 0 if int is out of range.
-  Value* getNthValue(int);
+  Value* getValue(int);
 
   /// Sets the Value located at position int in the list of incoming pairs.
   /// Asserts 0 if Value is not the same Type as the PhiNode.
   /// Asserts 0 if int is out of range.
-  void setNthValue(int, Value*);
+  void setValue(int, Value*);
 
   /// Returns the BasicBlock located at position int in the list of incoming
   /// pairs. Asserts 0 if int is out of range.
-  BasicBlock* getNthBlock(int);
+  BasicBlock* getBlock(int);
   
   /// Sets the BasicBlock located at position int in the list of incoming 
   /// pairs. Asserts 0 if int is out of range.
-  void setNthBlock(int, BasicBlock*);
+  void setBlock(int, BasicBlock*);
 
   /// Adds the pair of (Value*, BasicBlock*) to the list of incoming pairs.
   /// Asserts 0 if Value is not the same Type as the PhiNode.
   void addPair(Value*, BasicBlock*);
 
   /// detaches the pair at location int from the list of incoming pairs.
-  void removeNthPair(int);
+  void removePair(int);
   
 protected:
   PhiNode(Type *type, BasicBlock *insertAtEnd);
@@ -61,4 +62,5 @@ private:
   /// this PhiNode could take on depending on the flow of control
   std::list< std::pair<Value*, BasicBlock*> > pairs;
 };
+
 #endif

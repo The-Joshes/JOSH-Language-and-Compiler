@@ -28,7 +28,7 @@ namespace highlevel
     Function* getFunction(std::string &name);
 
     /// Sets the entry point to this Module if one exists.
-    /// The Function must be a part of this Module, else 0 is asserted.
+    /// If Function is not a part of this Module, it is added.
     /// A NULL Function indicates this Module has no main Function.
     void setMainFunction(Function*);
     /// Sets the entry point to this Module if one exists.
@@ -37,9 +37,6 @@ namespace highlevel
     void setMainFunction(const std::string &name);
     Function* getMainFunction(); 
 
-    void addGlobal(GlobalValue*);
-    GlobalValue* getGlobal(std::string &name);
-  
   private:
     Profile *profile;
   };

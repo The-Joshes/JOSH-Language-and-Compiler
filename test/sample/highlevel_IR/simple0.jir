@@ -1,0 +1,3 @@
+main:
+  .bb00:
+    RETURN i32 $42

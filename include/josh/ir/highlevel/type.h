@@ -42,14 +42,12 @@ public:
   
   int getBitWidth() const; ///< the size of this Type in bits
   
-  /// Is it valid to perform op on this type of Type?
-  virtual bool isValidFor(BinaryOp op);
-  
 protected:
-  Type(BaseType baseType);
+  Type(BaseType baseType, int bitWidth);
 
 private:
   BaseType baseType; ///< the exact type this Type describes
+  int bitWidth;
 };
 
 #endif

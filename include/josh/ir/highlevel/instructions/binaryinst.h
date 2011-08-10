@@ -47,10 +47,17 @@ public:
   };
 
   /// Both lhs and rhs must have the same Type, else 0 is asserted.
-  /// This Type must be NumericType, else 0 is asserted.
-  static ArithmeticInst* Create(Value *lhs, Value *rhs,
-                                ArithmeticOp op,
-                                BasicBlock *insertAtEnd);
+  /// This Type must be ArithmeticType, else 0 is asserted.
+  static ArithmeticInst* CreateADD(Value *lhs, Value *rhs, 
+                                   BasicBlock *insertAtEnd); ///< Creates a new Add Instruction
+  static ArithmeticInst* CreateSUB(Value *lhs, Value *rhs, 
+                                   BasicBlock *insertAtEnd); ///< Creates a new Substraction Instruction
+  static ArithmeticInst* CreateMUL(Value *lhs, Value *rhs, 
+                                   BasicBlock *insertAtEnd); ///< Creates a new Multiplication Instruction
+  static ArithmeticInst* CreateDIV(Value *lhs, Value *rhs, 
+                                   BasicBlock *insertAtEnd); ///< Creates a new Division Instruction
+  static ArithmeticInst* CreateREM(Value *lhs, Value *rhs, 
+                                   BasicBlock *insertAtEnd); ///< Creates a new Remainder Instruction
 
   ArithmeticOp getOp() const;
 
@@ -75,10 +82,20 @@ public:
   };
   
   /// Both lhs and rhs must have the same Type, else 0 is asserted.
-  /// This Type must either be NumericType or PointerType, else 0 is asserted.
-  static CompareInst* Create(Value *lhs, Value *rhs,
-                             CompareOp op,
-                             BasicBlock *insertAtEnd);
+  /// This Type must be NumericType, else 0 is asserted.
+  static CompareInst* CreateEQ(Value *lhs, Value *rhs,
+                               BasicBlock *insertAtEnd);
+  static CompareInst* CreateNE(Value *lhs, Value *rhs,
+                               BasicBlock *insertAtEnd);
+  static CompareInst* CreateLT(Value *lhs, Value *rhs,
+                               BasicBlock *insertAtEnd);
+  static CompareInst* CreateLTE(Value *lhs, Value *rhs,
+                                BasicBlock *insertAtEnd);
+  static CompareInst* CreateGT(Value *lhs, Value *rhs,
+                               BasicBlock *insertAtEnd);
+  static CompareInst* CreateGTE(Value *lhs, Value *rhs,
+                                BasicBlock *insertAtEnd);
+
   CompareOp getOp() const;
 
 protected:
@@ -96,15 +113,34 @@ public:
     SHL, SHR,    /*!< Shift left or shift right */
     AND, OR, XOR,
     NEG,         /*!< Two's complement negation */
-    NOT          /*!< Logical not */
+    NOT,         /*!< Logical not */
   };
  
-  /// If op = SHL or SHR, lhs must have a Numeric Type and rhs must have have an Integer Type.
-  /// If op = AND, OR, or XOR, lhs and rhs must both be the same Numeric Type.
-  /// If op = NEG or NOT, lhs must have a Numeric Type and rhs must be NULL.
-  static LogicalInst* Create(Value *lhs, Value *rhs,
-                             LogicalOp op,
-                             BasicBlock *insertAtEnd);
+  /// lhs must have a ArithmeticType and rhs must have have an Integer Type.
+  /// Else, 0 is asserted.
+  static LogicalInst* CreateSHL(Value *lhs, Value *rhs,
+                                BasicBlock *insertAtEnd);
+  /// lhs must have a ArithmeticType and rhs must have have an Integer Type.
+  /// Else, 0 is asserted.
+  static LogicalInst* CreateSHR(Value *lhs, Value *rhs,
+                                BasicBlock *insertAtEnd);
+  /// lhs and rhs must both be the same ArithmeticType, else 0 is asserted.
+  static LogicalInst* CreateAND(Value *lhs, Value *rhs,
+                                BasicBlock *insertAtEnd);
+  /// lhs and rhs must both be the same ArithmeticType, else 0 is asserted.
+  static LogicalInst* CreateOR(Value *lhs, Value *rhs,
+                               BasicBlock *insertAtEnd);
+  /// lhs and rhs must both be the same ArithmeticType, else 0 is asserted.
+  static LogicalInst* CreateXOR(Value *lhs, Value *rhs,
+                                BasicBlock *insertAtEnd);
+  
+  /// Lhs must have an ArithmeticType, else 0 is asserted.
+  static LogicalInst* CreateNEG(Value *lhs, BasicBlock *insertAtEnd);
+  
+  /// Lhs must have an ArithmeticType, else 0 is asserted.
+  static LogicalInst* CreateNOT(Value *lhs, BasicBlock *insertAtEnd);
+
+  LogicalOp getOp() const;
 
 protected:
   LogicalInst(Value *lhs, Value *rhs, LogicalOp op, BasicBlock*);

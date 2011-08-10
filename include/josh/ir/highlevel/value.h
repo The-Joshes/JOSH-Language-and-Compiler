@@ -29,7 +29,7 @@ public:
   
   /// Returns an Iterator containing all Values which depend on this Value.
   /// An empty Iterator implies this Value is never used.
-  std::list<Value*>::iterator& getUsers();
+  std::list<Value*>::const_iterator& getUsers() const;
   
   int getNumUsers() const; ///< returns the number of Values that use this
 

@@ -1,0 +1,16 @@
+VX (sint):
+  ,
+
+main:
+  .bb00:
+    STORE (sint) $VX, $0
+  .bb01:
+    val00 = (sint) LOAD $VX
+    val01 = (sint) ADD $4, $val00
+    STORE (sint) $VX, $val01
+    val02 = (sint) <= $val01, $4
+    BRANCH $val02 .bb01, .bb02
+  .bb02:
+    val03 = (sint) LOAD $VX
+    RETURN $val03
+

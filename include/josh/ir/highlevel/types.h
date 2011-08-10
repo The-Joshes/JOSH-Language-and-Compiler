@@ -11,8 +11,17 @@ namespace highlevel
 }
 
 /// class NumericType
-/// Represents INTEGER and FLOAT Types.
+/// Any type that can be represented by a basic number (INTEGER, FLOAT, POINTER)
 class NumericType : public Type
+{
+protected:
+  NumericType(BaseType baseType, int bitWidth);
+};
+
+/// clsas ArithmeticType
+/// Represents a Type that BinaryInst Instructions 
+/// (Arithmetic, Compare, and Logical) can be performed on.
+class ArithmeticType : public NumericType
 {
 public:
   /// Represents a float as specified by IEEE 754-2008; see 
@@ -37,27 +46,35 @@ public:
   };
   
   static Type* getFloat(Float floatType);
-  static Type* getInt(Integeral integerType, highlevel::Module *module); ///< returns the default of signed or unsigned
-  static Type* getSignedInt(Integeral integerType, highlevel::Module *module);
-  static Type* getUnsignedInt(Integeral integerType, highlevel::Module *module);
-
+  static Type* get(Integeral integerType, highlevel::Module *module); ///< returns the default of signed or unsigned
+  static Type* getSigned(Integeral integerType, highlevel::Module *module);
+  static Type* getUnsigned(Integeral integerType, highlevel::Module *module);
 };
 
 
 /// class PointerType
 /// Represents a pointer to a location in memory.
-class PointerType : public Type
+/** 
+ *  If a PointerType is constant, it is illegal to perform a StoreInst
+ *  on the Value containing it.
+ */
+class PointerType : public NumericType
 {
 public:
-  static PointerType* Create(Type *pointedTo);
+  static PointerType* Create(Type *pointedTo,
+                             highlevel::Module*, 
+                             bool isImmutable = false);
 
   Type* getPointedToType();
+  
+  bool isImmutable() const;
 
 protected:
-  PointerType(Type *pointedToType);
+  PointerType(Type *pointedToType, bool constant);
 
 private:
   Type *pointedToType;
+  bool constant;
 };
 
 /// class ComplexType
@@ -65,24 +82,12 @@ private:
 class ComplexType : public Type
 {
 public:
-  /// If canPack is true, the Types are rearranged to try minimizing the
-  /// memory footprint of the ComplexType.  Otherwise, the Types are left
-  /// in their original order.
-  /// If more fine tuned control is needed (ex can do ADD but not DIVIDE),
-  /// then we'll have to figure out an additional factory method.
-  static ComplexType* Create(const std::list<Type*>::iterator &types,
-                             bool validForArithmeticOp,
-                             bool validForCompareOp,
-                             bool canPack = false);
+  static ComplexType* Create(const std::list<Type*>::iterator &types);
 
   std::list<Type*>::iterator getTypes();
   
-  /// Is it valid to perform op on this type of Type?
-  virtual bool isValidFor(BinaryOp op);
-
 protected:
   ComplexType(std::list<Type*>::iterator);
-  bool validForArithmeticOp, validForCompareOp;
 
 private:
   std::list<Type*>::iterator types();

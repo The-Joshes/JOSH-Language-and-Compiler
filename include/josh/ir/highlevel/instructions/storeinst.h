@@ -13,6 +13,7 @@ class StoreInst : public Instruction
 public:
   /// Returns a new StoreInst that stores Value toStore at location address.
   /// Asserts 0 if address's Type is not a pointer.
+  /// Asserts 0 if the PointerType is constant.
   /// Asserts 0 if the address's pointed to Type to is not equal to Value's Type.
   static StoreInst* Create(Value *toStore, Value *address, BasicBlock *insertAtEnd);
 
@@ -22,6 +23,7 @@ public:
 
   /// Asserts 0 if address's Type is not a pointer.
   /// Asserts 0 if the address' pointed to Type is different than toStore's Type.
+  /// Asserts 0 if the PointerType is constant.
   void setAddress(Value*);
   Value* getAddress();     ///< returns the address to which this is storing to
 

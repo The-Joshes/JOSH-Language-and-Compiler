@@ -14,10 +14,8 @@ m->setMainFunction(f);
 BasicBlock *bb = BasicBlock::Create(f);
 f->setEntryPoint(bb);
 
-Instruction *yAddr = AllocaInst::Create(intType, bb);
-GlobalValue *four = GlobalValue::CreateConstant(4, intType);  
-StoreInst::Create(four, yAddr, bb);                        // y = 4
-Instruction *x = LoadInst::Create(xAddr, bb);              // x = *xAddr
-Instruction *newX = BinaryInst::Create(ADD, y, x, bb);     // x = y + x
-Instruction *storeX = StoreInst::Create(newX, xAddr, bb);  // *xAddr = x
-TerminatorInst::CreateReturn(returnVal, bb);               // return x
+GlobalValue *four = GlobalValue::CreateConstant(4, intType);   // y = 4
+Instruction *x = LoadInst::Create(xAddr, bb);                  // x = *xAddr
+Instruction *newX = ArithmeticInst::Create(ADD, four, x, bb);     // x = y + x
+Instruction *storeX = StoreInst::Create(newX, xAddr, bb);      // *xAddr = x
+TerminatorInst::CreateReturn(returnVal, bb);                   // return x

@@ -1,0 +1,36 @@
+#!/bin/bash
+#./newHeader name
+#creates header file called "name.h" for class Name with header guards
+
+if [ $# -ne 1 ]
+then
+  echo "Incorrect number of args!"
+  echo "Usage: "$0" fileName"
+  echo "Exiting..."
+  exit 1
+fi
+
+FILE=$1".h"
+if [ -e $FILE ]
+then
+  echo $FILE" already exists!"
+  echo "Exiting..."
+  exit 1
+fi
+CLASS=`echo ${1:0:1} | tr '[:lower:]' '[:upper:]'`${1:1}
+HEADER=`echo $1 | tr '[:lower:]' '[:upper:]'`
+touch $FILE
+echo -e "#ifndef __"$HEADER"_H__\n\
+#define __"$HEADER"_H__\n\n\
+/// class "$CLASS"\n\
+/**\n\
+ *\n\
+ */\n\
+class "$CLASS"\n\
+{\n\
+public:\n\n\
+protected:\n\n\
+private:\n\n\
+};\n\
+\n#endif"\
+>> $FILE

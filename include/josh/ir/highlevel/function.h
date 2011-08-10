@@ -4,7 +4,8 @@
 #include <cstring> // for NULL
 #include <list>
 
-#include "josh/ir/highlevel/value.h"
+#include "josh/ir/highlevel/globalvalue.h"
+#include "josh/ir/highlevel/memoryuser.h"
 
 class BasicBlock;
 class Module;
@@ -19,7 +20,7 @@ class FunctionType;
  * A function is not considered valid for compilation until an entryPoint 
  * is specified; see entryPoint.
  */
-class Function : public Value
+class Function : public GlobalValue, public MemoryUser
 {
 public:
   static Function* Create(Module *parent,
@@ -28,7 +29,6 @@ public:
   
   BasicBlock* getEntryPoint();          ///< @see entryPoint
   void setEntryPoint(BasicBlock*);      ///< @see entryPoint
-  const FunctionType* getType() const;  ///< contains the return type and argument type(s)
 
   /// A function is composed of a list of BasicBlocks.
   /// The order of BB in a function is arbitrary; by convention, the entry point
@@ -38,19 +38,19 @@ public:
   /// normal flow of control.  
   std::list<BasicBlock*> getBlocks(); 
 
-  /// If the parent Module already has a main Function, the other
-  /// main function is notified of its demotion and this Function
-  /// becomes the Module's main Function.
+  /// Simply notifies this Function if it is the entry point for its Module.
+  /// The Module will automatically update the Function when it sets (or unsets)
+  /// its main Function.
   void setMainFunction(bool isMain);
   bool isMainFunction();
 
 private:
-  Function(Module*, FunctionType*, BasicBlock*);
+  Function(bool externalVisbility, Module*, Type*);
 
   Module *parent;
-  FunctionType *type;
-
+  
   /// The point of entrance for when a function is called.
+  /// 0 is asserted if entryPoint is NULL when this Function is compiled.
   BasicBlock *entryPoint;
 
   bool isMain;

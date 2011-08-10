@@ -47,12 +47,6 @@ public:
 
   TerminatorOp getTerminatorOp(); 
 
-  /// If this Instruction is a RETURN, ensures that the parent Function's 
-  /// return Type is the same as the Type of the Value being returned.
-  /// If this condition is not met, 0 is asserted.
-  /// Proceeds as normal for branching ops.
-  virtual void setParent(BasicBlock*);
-
 protected:
   TerminatorInst(TerminatorOp op, BasicBlock *insertAtEnd);
 

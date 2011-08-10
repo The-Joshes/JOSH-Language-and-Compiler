@@ -5,6 +5,7 @@
 #include <string>
 
 #include "josh/ir/highlevel/value.h"
+#include "josh/ir/highlevel/memoryuser.h"
 
 class Function;
 class Instruction;
@@ -21,15 +22,18 @@ class TerminatorInst;
  * optimization of the BB, but must be true by the time the code is to be compiled.
  * The BaseType of a BasicBlock is always LABEL.
  */
-class BasicBlock : public Value
+class BasicBlock : public Value, public MemoryUser
 {
 public:
   static BasicBlock* Create(Function *parent, const std::string &name = "");
   
-  std::list<BasicBlock*>::iterator&  getPreds(); ///< @see preds
-  std::list<BasicBlock*>::iterator&  getSuccs(); ///< @see succs
-  std::list<Instruction*>& getInsts();           ///< @see insts
-  
+  std::list<BasicBlock*>::const_iterator&  getPreds() const; ///< @see preds
+  std::list<BasicBlock*>::const_iterator&  getSuccs() const; ///< @see succs
+  std::list<Instruction*>::const_iterator& getInsts() const; ///< @see insts
+ 
+  void removeInstruction(int);
+  void removeInstruction(Instruction*);
+
   Function* getParent();                         ///< @see parent
 
 private:

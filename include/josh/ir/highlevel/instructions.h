@@ -3,6 +3,7 @@
 
 #include "josh/ir/highlevel/instructions/allocainst.h"
 #include "josh/ir/highlevel/instructions/binaryinst.h"
+#include "josh/ir/highlevel/instructions/indexinst.h"
 #include "josh/ir/highlevel/instructions/callinst.h"
 #include "josh/ir/highlevel/instructions/castinst.h"
 #include "josh/ir/highlevel/instructions/loadinst.h"

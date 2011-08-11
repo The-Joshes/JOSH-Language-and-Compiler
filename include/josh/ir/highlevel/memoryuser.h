@@ -14,25 +14,27 @@ class MemoryUser
 public:
   /// returns true if the object in question may write to memory 
   /// false otherwise
-  bool mayWriteMemory();
+  bool mayWriteMemory() const;
   
   /// returns true if the object in question may read from memory 
   /// false otherwise
-  bool mayReadMemory();
+  bool mayReadMemory() const;
  
   /// returns true if the object in question may read or write to memory
   /// false otherwise
-  bool mayUseMemory();
+  bool mayUseMemory() const;
 
 protected:
-  MemoryUser(bool mayWrite, bool mayRead);
+  MemoryUser(int numReaders, int numWriters);
   
-  void setMayWrite(bool);
-  void setMayRead(bool);
+  void addWriter(int num=1);
+  bool removeWriter(int num=1); ///< returns true if there are now 0 writers
+
+  void addReader(int num=1);
+  bool removeReader(int num=1); ///< returns true if there are now 0 readers
 
 private:
-  bool mayWrite, mayRead;
-
+  int numReaders, numWriters;
 };
 
 #endif

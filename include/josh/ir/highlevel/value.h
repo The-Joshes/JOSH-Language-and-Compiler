@@ -44,7 +44,7 @@ public:
   /// recommended to use Module's getUniqueName() or
   /// isNameUnique() functionality.
   void setName(std::string name);
-  const std::string& getName();
+  const std::string& getName() const;
 
   virtual ~Value();
 

@@ -25,17 +25,19 @@ namespace highlevel
     Value* removeValueWithName(const std::string &name);
 
     void addFunction(Function*);
-    Function* getFunction(std::string &name);
+    Function* getFunction(std::string &name) const;
 
     /// Sets the entry point to this Module if one exists.
     /// If Function is not a part of this Module, it is added.
     /// A NULL Function indicates this Module has no main Function.
     void setMainFunction(Function*);
+
     /// Sets the entry point to this Module if one exists.
     /// The Function must be a part of this Module, else 0 is asserted.
     /// An empty name string indicates this Module has no main Function.
     void setMainFunction(const std::string &name);
-    Function* getMainFunction(); 
+
+    Function* getMainFunction() const; 
 
   private:
     Profile *profile;

@@ -19,13 +19,13 @@ public:
   /// returns false otherwise.
   bool canBeComputedAtCompileTime();
 
-  Value *getLHS(); ///< returns the Value corresponding to the lhs of the BinaryInst
-  Value *getRHS(); ///< returns the Value corresponding to the rhs of the BinaryInst
+  Value *getLHS() const; 
+  Value *getRHS() const;
 
-  /// changes the lhs Value, asserting 0 if the new Value has a differing Type from the original LHS.
+  /// Asserts 0 if the new Value has a differing Type from the original LHS.
   virtual void setLHS(Value*); 
 
-  /// changes the lhs Value, asserting 0 if the new Value has a differing Type from the original RHS.
+  /// Asserts 0 if the new Value has a differing Type from the original RHS.
   virtual void setRHS(Value*); 
   
 protected:
@@ -110,20 +110,11 @@ class LogicalInst : public BinaryInst
 public:
   enum LogicalOp
   {
-    SHL, SHR,    /*!< Shift left or shift right */
     AND, OR, XOR,
     NEG,         /*!< Two's complement negation */
     NOT,         /*!< Logical not */
   };
  
-  /// lhs must have a ArithmeticType and rhs must have have an Integer Type.
-  /// Else, 0 is asserted.
-  static LogicalInst* CreateSHL(Value *lhs, Value *rhs,
-                                BasicBlock *insertAtEnd);
-  /// lhs must have a ArithmeticType and rhs must have have an Integer Type.
-  /// Else, 0 is asserted.
-  static LogicalInst* CreateSHR(Value *lhs, Value *rhs,
-                                BasicBlock *insertAtEnd);
   /// lhs and rhs must both be the same ArithmeticType, else 0 is asserted.
   static LogicalInst* CreateAND(Value *lhs, Value *rhs,
                                 BasicBlock *insertAtEnd);

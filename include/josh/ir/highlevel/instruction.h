@@ -14,7 +14,8 @@ class BasicBlock;
 class Instruction : public Value, public MemoryUser
 {
 public:
-  BasicBlock* getParent();
+  BasicBlock* getParent() const;
+  void setParent(BasicBlock*); ///< updates the old parent accordingly
   
   /// returns true if this Instruction's execution may have side effects, such
   /// as accessing memory, dividing by zero, etc.  An Instruction with side
@@ -22,23 +23,12 @@ public:
   /// Instructions.
   bool mayHaveSideEffects() const;
 
-  /// Returns an iterator containing all Values that this Value
-  /// depends on/uses.
-  std::list<Value*>::const_iterator& getUses() const;
-
-  int getNumUses() const; ///< returns the number of Values that this uses
-
 protected:
   Instruction(Type*, BasicBlock *insertAtEnd,
               bool mayReadMemory = false, bool mayWriteMemory = false);
 
-  void addUse(Value*);     ///< adds Value to the uses list
-  bool removeUse(Value*);  ///< if Value is in uses list, removes and returns true
-
 private:
   BasicBlock *parent;
-  std::list<Value*> uses;  ///< all Values this Instruction depends on
-
 };
 
 #endif

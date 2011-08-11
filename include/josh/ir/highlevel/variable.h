@@ -16,10 +16,12 @@ namespace highlevel
 
 /// class Variable
 /// A piece of memory allocated globally, either initialized or uninitialized.
-/// Variables always have a PointerType.
+/// By default, Variables are initialized to NOT be visibile outside the
+/// current Module.  
 /** 
  * An initialized Variable contains one or more of either or both 
  * basic types (Literals) and pointers to other Variables.
+ * Variables always have a PointerType.
  */
 class Variable : public GlobalValue
 {
@@ -27,25 +29,29 @@ public:
   /// Creates a new, unitialized variable in the global space.
   static Variable* Create(Type *type, 
                           highlevel::Module*, 
-                          const std::string &name = "");
+                          const std::string &name = "",
+                          bool externallyVisible = false);
   
   /// Creates a new, initialized variable in the global space.
   static Variable* Create(ImmutableValue *value, 
                           highlevel::Module*, 
-                          const std::string &name = "");
+                          const std::string &name = "",
+                          bool externallyVisible = false);
 
   /// Creates a new, uninitialized variable in the global space.
   /// Useful for creating arrays or structs.
   static Variable* Create(const std::list<Type*>::iterator &types,
                           highlevel::Module*, 
-                          const std::string &name = "");
+                          const std::string &name = "",
+                          bool externallyVisible = false);
 
   /// Creates a new, initialized variable in the global space.
   /// Useful for creating arrays or structs.
   static Variable* Create(const std::list<ImmutableValue*>::iterator &values,
                           highlevel::Module*, 
-                          const std::string &name = "");
- 
+                          const std::string &name = "",
+                          bool externallyVisible = false);
+
   int getNumValues() const;
   
   /// for non initialized Values, there will be a default NULL value
@@ -53,7 +59,7 @@ public:
   
   /// Changes the Value that this Variable is initialized with.
   /// Asserts 0 if int is out of range.
-  /// Asserts 0 if the Type at position int does not match Value.
+  /// Asserts 0 if the Type at position int does not match Value's Type.
   void setValue(int, Value*);
 
 protected:

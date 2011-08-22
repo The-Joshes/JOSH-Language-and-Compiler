@@ -1,2 +1,25 @@
+# Doxygen Output
 doc/doxygen/html
 doc/doxygen/latex
+
+# Autotools stuff
+aclocal.m4
+autom4te.cache/
+config.guess
+config.sub
+configure
+depcomp
+include/config.h.in
+install-sh
+ltmain.sh
+m4/
+missing
+
+# Makefiles
+Makefile.in
+src/Makefile.in
+src/josh/Makefile.in
+src/josh/ast/Makefile.in
+src/josh/ir/Makefile.in
+src/josh/system/Makefile.in
+src/josh/token/Makefile.in

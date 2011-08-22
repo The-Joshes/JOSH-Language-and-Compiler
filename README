@@ -53,8 +53,10 @@ And it removes executables, object files, and the like - basically, restores
 our code to the point AFTER calling ./at_setup.sh init. That is, configure,
 m4/stuff, and all the rest are still there. 
 
-To completely clean up - that is - restore your code to the point where svn st
-actually gives you meaningful output, use
+To completely clean up - that is - restore your code to the point where git
+status actually gives you meaningful output, use
 $ ./at_setup.sh clean
+(Note: This is no longer necessary, since these files are in the .gitignore 
+file, although should be done before distribution.)
 
 That removes all of the auto-generated files. At least, it does on my system...

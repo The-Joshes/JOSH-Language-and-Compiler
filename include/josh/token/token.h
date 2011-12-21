@@ -2,6 +2,7 @@
 #define TOKEN_H
 
 #include <iostream>
+#include <list>
 
 namespace jtoken {
 
@@ -13,8 +14,9 @@ namespace jtoken {
     virtual void print(std::ostream&) const = 0;
   };
 
-  void get_tokens(std::istream&);
+  void get_tokens(std::istream&, std::list<Token*>&);
   std::ostream &operator<<(std::ostream&, const Token&);
+
 }
 
 #endif /* TOKEN_H */

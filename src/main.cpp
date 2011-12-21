@@ -7,11 +7,13 @@
 
 using namespace std;
 using namespace josh;
+using namespace jtoken;
 
 int main() {
   cout << "Welcome to " << PACKAGE_STRING  << "\n";
 
-  get_tokens();
+  list<Token*> token_list;
+  get_tokens(cin, token_list);
   AST ast;
   ast.createIR();
 

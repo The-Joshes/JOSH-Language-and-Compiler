@@ -2,46 +2,56 @@
 
 using namespace std;
 
-Keyword::init = false;
+namespace jtoken {
 
-template <typename T>
-T *create<T>() {
-  return new T();
-}
+  map<string, keyword_map_fp_t> Keyword::keyword_map;
 
-void init_keyword_map(map<string, (Keyword*)()>&);
-		      
-Keyword *Keyword::getKeyword(const string &keyword) {
-  if(!init) {
-    init_keyword_map(keyword_map);
-    init = true;
+  template <class T>
+  Keyword *createKeyword() {
+    return new T();
   }
 
-  (Keyword*)() keyword = keyword_map[keyword];
-  return keyword ? keyword() : NULL;
-}
+  Keyword *createIf() {return new If(); }
 
-void init_keyword_map(map<string, (Keyword*)()> &keyword_map) {
-  // Control Flow
-  keyword_map["if"] = create<If>;
-  keyword_map["for"] = create<For>;
-  keyword_map["while"] = create<While>;
-  keyword_map["do"] = create<Do>;
-  keyword_map["switch"] = create<Switch>;
-  keyword_map["break"] = create<Break>;
-
-  // OO and Polymorphism
-  keyword_map["class"] = create<Class>;
-  keyword_map["struct"] = create<Struct>;
-  keyword_map["extends"] = create<Extends>;
-  keyword_map["abstract"] = create<Abstract>;
-  keyword_map["final"] = create<Final>;
-  keyword_map["const"] = create<Const>;
-
-  // Primitive Types
-  keyword_map["int"] = create<Int>;
-  keyword_map["char"] = create<Char>;
-  keyword_map["bool"] = create<Bool>;
-
-  return;
+  bool Keyword::init = false;
+  
+  void init_keyword_map(map<string, keyword_map_fp_t>&);
+  
+  Keyword *Keyword::getKeyword(const string &keyword) {
+    if(!init) {
+      init_keyword_map(keyword_map);
+      init = true;
+    }
+    
+    keyword_map_fp_t keyword_fn  = keyword_map[keyword];
+    if (keyword_fn) {
+      return keyword_fn();
+    }
+    return NULL;
+  }
+  
+  void init_keyword_map(map<string, keyword_map_fp_t> &keyword_map) {
+    // Control Flow
+    keyword_map["if"] = &createKeyword<If>;
+    keyword_map["for"] = &createKeyword<For>;
+    keyword_map["while"] = createKeyword<While>;
+    keyword_map["do"] = createKeyword<Do>;
+    keyword_map["switch"] = createKeyword<Switch>;
+    keyword_map["break"] = createKeyword<Break>;
+    
+    // OO and Polymorphism
+    keyword_map["class"] = createKeyword<Class>;
+    keyword_map["struct"] = createKeyword<Struct>;
+    keyword_map["extends"] = createKeyword<Extends>;
+    keyword_map["abstract"] = createKeyword<Abstract>;
+    keyword_map["final"] = createKeyword<Final>;
+    keyword_map["const"] = createKeyword<Const>;
+    
+    // Primitive Types
+    keyword_map["int"] = createKeyword<Int>;
+    keyword_map["char"] = createKeyword<Char>;
+    keyword_map["bool"] = createKeyword<Bool>;
+    
+    return;
+  }
 }

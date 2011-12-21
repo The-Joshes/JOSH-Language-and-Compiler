@@ -2,48 +2,43 @@
 #define LITERALS_H
 
 #include "josh/token/token.h"
+
 #include <string>
 
 namespace jtoken {
  
-  class IntLiteral : public Token {
+  class Literal : public Token {
   public:
-    IntLiteral(int value);
-    void print(std::ostream&);
+    Literal(const std::string &type, const std::string &value);
+    void print(std::ostream&) const;
   private:
-    int value;
+    std::string type;
+    std::string value;
   };
 
-  class FloatLiteral : public Token {
+  class IntLiteral : public Literal {
   public:
-    FloatLiteral(float value);
-    void print(std::ostream&);
-  private:
-    float value;
+    IntLiteral(const std::string &value);
   };
 
-  class StringLiteral : public Token {
+  class FloatLiteral : public Literal {
   public:
-    StringLiteral(const string &value);
-    void print(std::ostream&);
-  private:
-    string value;
+    FloatLiteral(const std::string &value);
   };
 
-  class CharLiteral : public Token {
+  class StringLiteral : public Literal {
   public:
-    CharLiteral(char value);
-    void print(std::ostream&);
-  private:
-    char value;
+    StringLiteral(const std::string &value);
   };
 
-  class BoolLiteral : public Token {
+  class CharLiteral : public Literal {
   public:
-    BoolLiteral(bool value);
-    void print(std::ostream&);
-  private:
-    bool value;
+    CharLiteral(const std::string &value);
+  };
+
+  class BoolLiteral : public Literal {
+  public:
+    BoolLiteral(const std::string &value);
   };
 
 }

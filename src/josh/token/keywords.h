@@ -38,34 +38,34 @@ namespace jtoken {
    * Control Flow                                             *
    ************************************************************/
 
-  class If : public Keyword {
+  class IfKeyword : public Keyword {
   public:
-    If() : Keyword("if") {}
+    IfKeyword() : Keyword("if") {}
   };
 
-  class For : public Keyword {
+  class ForKeyword : public Keyword {
   public:
-    For() : Keyword("for") {}
+    ForKeyword() : Keyword("for") {}
   };
 
-  class While : public Keyword {
+  class WhileKeyword : public Keyword {
   public:
-    While() : Keyword("while") {}
+    WhileKeyword() : Keyword("while") {}
   };
 
-  class Do : public Keyword {
+  class DoKeyword : public Keyword {
   public:
-    Do() : Keyword("do") {}
+    DoKeyword() : Keyword("do") {}
   };
 
-  class Switch : public Keyword {
+  class SwitchKeyword : public Keyword {
   public:
-    Switch() : Keyword("switch") {}
+    SwitchKeyword() : Keyword("switch") {}
   };
 
-  class Break : public Keyword {
+  class BreakKeyword : public Keyword {
   public:
-    Break() : Keyword("break") {}
+    BreakKeyword() : Keyword("break") {}
   };
 
 
@@ -73,34 +73,34 @@ namespace jtoken {
    * OO and Polymorphism                                      *
    ************************************************************/
 
-  class Class : public Keyword {
+  class ClassKeyword : public Keyword {
   public:
-    Class() : Keyword("class") {}
+    ClassKeyword() : Keyword("class") {}
   };
 
-  class Struct : public Keyword {
+  class StructKeyword : public Keyword {
   public:
-    Struct() : Keyword("struct") {}
+    StructKeyword() : Keyword("struct") {}
   };
 
-  class Extends : public Keyword {
+  class ExtendsKeyword : public Keyword {
   public:
-    Extends() : Keyword("extends") {}
+    ExtendsKeyword() : Keyword("extends") {}
   };
 
-  class Abstract : public Keyword {
+  class AbstractKeyword : public Keyword {
   public:
-    Abstract() : Keyword("abstract") {}
+    AbstractKeyword() : Keyword("abstract") {}
   };
 
-  class Final : public Keyword {
+  class FinalKeyword : public Keyword {
   public:
-    Final() : Keyword("final") {}
+    FinalKeyword() : Keyword("final") {}
   };
 
-  class Const : public Keyword {
+  class ConstKeyword : public Keyword {
   public:
-    Const() : Keyword("const") {}
+    ConstKeyword() : Keyword("const") {}
   };
 
 
@@ -108,19 +108,19 @@ namespace jtoken {
    * Primitive Types                                          *
    ************************************************************/
 
-  class Int : public Keyword {
+  class IntKeyword : public Keyword {
   public:
-    Int() : Keyword("int") {}
+    IntKeyword() : Keyword("int") {}
   };
 
-  class Char : public Keyword {
+  class CharKeyword : public Keyword {
   public:
-    Char() : Keyword("char") {}
+    CharKeyword() : Keyword("char") {}
   };
 
-  class Bool : public Keyword {
+  class BoolKeyword : public Keyword {
   public:
-    Bool() : Keyword("bool") {}
+    BoolKeyword() : Keyword("bool") {}
   };
 
 }

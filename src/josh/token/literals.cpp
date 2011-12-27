@@ -8,7 +8,7 @@ namespace jtoken {
     : type(type), value(value) {}
 
   void Literal::print(ostream &out) const {
-    out << type << " Literal (" << value << ")\n";
+    out << type << " Literal (" << value << ")";
   }
 
   IntLiteral::IntLiteral(const string &value) 

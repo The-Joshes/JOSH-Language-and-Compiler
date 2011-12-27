@@ -8,7 +8,7 @@ namespace jtoken {
     identifier(id) {}
 
   void Identifier::print(ostream &out) const {
-    out << "Identifiers, yay!";
+    out << "Identifier " << identifier;
   }
 
 }

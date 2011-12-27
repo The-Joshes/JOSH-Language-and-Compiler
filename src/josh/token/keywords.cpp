@@ -11,8 +11,6 @@ namespace jtoken {
     return new T();
   }
 
-  Keyword *createIf() {return new If(); }
-
   bool Keyword::init = false;
   
   void init_keyword_map(map<string, keyword_map_fp_t>&);
@@ -32,25 +30,25 @@ namespace jtoken {
   
   void init_keyword_map(map<string, keyword_map_fp_t> &keyword_map) {
     // Control Flow
-    keyword_map["if"] = &createKeyword<If>;
-    keyword_map["for"] = &createKeyword<For>;
-    keyword_map["while"] = createKeyword<While>;
-    keyword_map["do"] = createKeyword<Do>;
-    keyword_map["switch"] = createKeyword<Switch>;
-    keyword_map["break"] = createKeyword<Break>;
+    keyword_map["if"] = &createKeyword<IfKeyword>;
+    keyword_map["for"] = &createKeyword<ForKeyword>;
+    keyword_map["while"] = createKeyword<WhileKeyword>;
+    keyword_map["do"] = createKeyword<DoKeyword>;
+    keyword_map["switch"] = createKeyword<SwitchKeyword>;
+    keyword_map["break"] = createKeyword<BreakKeyword>;
     
     // OO and Polymorphism
-    keyword_map["class"] = createKeyword<Class>;
-    keyword_map["struct"] = createKeyword<Struct>;
-    keyword_map["extends"] = createKeyword<Extends>;
-    keyword_map["abstract"] = createKeyword<Abstract>;
-    keyword_map["final"] = createKeyword<Final>;
-    keyword_map["const"] = createKeyword<Const>;
+    keyword_map["class"] = createKeyword<ClassKeyword>;
+    keyword_map["struct"] = createKeyword<StructKeyword>;
+    keyword_map["extends"] = createKeyword<ExtendsKeyword>;
+    keyword_map["abstract"] = createKeyword<AbstractKeyword>;
+    keyword_map["final"] = createKeyword<FinalKeyword>;
+    keyword_map["const"] = createKeyword<ConstKeyword>;
     
     // Primitive Types
-    keyword_map["int"] = createKeyword<Int>;
-    keyword_map["char"] = createKeyword<Char>;
-    keyword_map["bool"] = createKeyword<Bool>;
+    keyword_map["int"] = createKeyword<IntKeyword>;
+    keyword_map["char"] = createKeyword<CharKeyword>;
+    keyword_map["bool"] = createKeyword<BoolKeyword>;
     
     return;
   }

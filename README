@@ -41,7 +41,6 @@ $ make && make install
 ********************************************************************************
 Cleaning up
 ********************************************************************************
-
 To clean up, run
 $ ./compile.sh clean
 
@@ -60,3 +59,7 @@ $ ./at_setup.sh clean
 file, although should be done before distribution.)
 
 That removes all of the auto-generated files. At least, it does on my system...
+
+********************************************************************************
+Work flow
+********************************************************************************
